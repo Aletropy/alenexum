@@ -1,0 +1,206 @@
+/**
+ * Structured error system.
+ *
+ * Every framework failure carries a stable machine-readable `code`
+ * (`FRAMEWORK_*`), a category, contextual metadata for diagnostics, and an
+ * optional actionable diagnostic. Application errors thrown from command
+ * handlers are wrapped — never swallowed — so centralized logging always has
+ * enough context to answer what failed, where, and what to investigate next.
+ */
+
+export const FRAMEWORK_ERROR_CODES = [
+  "FRAMEWORK_INVALID_CONFIGURATION",
+  "FRAMEWORK_ROUTE_NOT_FOUND",
+  "FRAMEWORK_COMMAND_HANDLER_FAILED",
+  "FRAMEWORK_MIDDLEWARE_FAILED",
+  "FRAMEWORK_PLUGIN_INITIALIZATION_FAILED",
+  "FRAMEWORK_LIFECYCLE_HOOK_FAILED",
+  "FRAMEWORK_CONNECTOR_START_FAILED",
+  "FRAMEWORK_INTERACTION_ALREADY_ACKNOWLEDGED",
+  "FRAMEWORK_SHUTDOWN_TIMEOUT",
+  "FRAMEWORK_SERVICE_NOT_FOUND",
+  "FRAMEWORK_SERVICE_ALREADY_REGISTERED",
+  "FRAMEWORK_INTERNAL",
+] as const;
+
+export type FrameworkErrorCode = (typeof FRAMEWORK_ERROR_CODES)[number];
+
+export type FrameworkErrorCategory =
+  | "Config"
+  | "Validation"
+  | "UserInput"
+  | "Permission"
+  | "Application"
+  | "Framework"
+  | "DiscordAPI"
+  | "RateLimit"
+  | "Gateway"
+  | "Network"
+  | "Database"
+  | "Plugin"
+  | "Dependency"
+  | "Internal"
+  | "Unknown";
+
+/** Contextual metadata attached to errors for structured diagnostics. */
+export interface FrameworkErrorContext {
+  subsystem?: string | undefined;
+  event?: string | undefined;
+  command?: string | undefined;
+  interactionId?: string | undefined;
+  guildId?: string | null | undefined;
+  channelId?: string | null | undefined;
+  userId?: string | null | undefined;
+  shardId?: string | number | null | undefined;
+  requestId?: string | undefined;
+  plugin?: string | undefined;
+  module?: string | undefined;
+  durationMs?: number | undefined;
+  [key: string]: unknown;
+}
+
+/**
+ * Actionable diagnostic. Wording must stay probabilistic ("likely",
+ * "possible", "suggested") — the framework reports evidence, not certainty.
+ */
+export interface FrameworkDiagnostic {
+  likelyCause: string;
+  suggestedInvestigation: string[];
+}
+
+export interface FrameworkErrorInit {
+  code: FrameworkErrorCode;
+  category: FrameworkErrorCategory;
+  message: string;
+  context?: FrameworkErrorContext;
+  cause?: unknown;
+  diagnostic?: FrameworkDiagnostic;
+}
+
+export class FrameworkError extends Error {
+  readonly code: FrameworkErrorCode;
+  readonly category: FrameworkErrorCategory;
+  readonly context: FrameworkErrorContext;
+  readonly diagnostic?: FrameworkDiagnostic;
+
+  constructor(init: FrameworkErrorInit) {
+    super(
+      init.message,
+      init.cause !== undefined ? { cause: init.cause } : undefined,
+    );
+    this.name = "FrameworkError";
+    this.code = init.code;
+    this.category = init.category;
+    this.context = init.context ?? {};
+    if (init.diagnostic !== undefined) {
+      this.diagnostic = init.diagnostic;
+    }
+  }
+
+  toJSON(): {
+    name: string;
+    code: FrameworkErrorCode;
+    category: FrameworkErrorCategory;
+    message: string;
+    stack: string | undefined;
+    context: FrameworkErrorContext;
+    diagnostic: FrameworkDiagnostic | undefined;
+  } {
+    return {
+      name: this.name,
+      code: this.code,
+      category: this.category,
+      message: this.message,
+      stack: this.stack,
+      context: this.context,
+      diagnostic: this.diagnostic,
+    };
+  }
+}
+
+export function isFrameworkError(error: unknown): error is FrameworkError {
+  return error instanceof FrameworkError;
+}
+
+function messageOf(error: unknown): string {
+  if (error instanceof Error) {
+    return error.message;
+  }
+  return typeof error === "string" ? error : "Unknown error value";
+}
+
+/**
+ * Wrap an unknown thrown value in a FrameworkError, preserving the original
+ * as `cause`. FrameworkErrors pass through untouched.
+ */
+export function toFrameworkError(
+  code: FrameworkErrorCode,
+  category: FrameworkErrorCategory,
+  message: string,
+  error: unknown,
+  context: FrameworkErrorContext = {},
+  diagnostic?: FrameworkDiagnostic,
+): FrameworkError {
+  if (isFrameworkError(error)) {
+    return error;
+  }
+  const init: FrameworkErrorInit = {
+    code,
+    category,
+    message: `${message}: ${messageOf(error)}`,
+    context,
+    cause: error,
+  };
+  if (diagnostic !== undefined) {
+    init.diagnostic = diagnostic;
+  }
+  return new FrameworkError(init);
+}
+
+/** Minimal JSON-safe error shape for structured logs. Never includes secrets. */
+export function serializeError(error: unknown): {
+  name: string;
+  message: string;
+  stack?: string;
+  code?: string;
+} {
+  if (isFrameworkError(error)) {
+    const out: {
+      name: string;
+      message: string;
+      stack?: string;
+      code?: string;
+    } = {
+      name: error.name,
+      message: error.message,
+      code: error.code,
+    };
+    if (error.stack !== undefined) {
+      out.stack = error.stack;
+    }
+    return out;
+  }
+  if (error instanceof Error) {
+    const out: {
+      name: string;
+      message: string;
+      stack?: string;
+      code?: string;
+    } = {
+      name: error.name,
+      message: error.message,
+    };
+    if (error.stack !== undefined) {
+      out.stack = error.stack;
+    }
+    const maybeCode = (error as { code?: unknown }).code;
+    if (typeof maybeCode === "string" || typeof maybeCode === "number") {
+      out.code = String(maybeCode);
+    }
+    return out;
+  }
+  return {
+    name: "UnknownError",
+    message: typeof error === "string" ? error : "Unknown error value",
+  };
+}

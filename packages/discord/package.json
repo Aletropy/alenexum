@@ -1,0 +1,32 @@
+{
+  "name": "@discord-framework/discord",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "lint": "biome check src",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "@discord-framework/core": "workspace:*",
+    "discord.js": "^14.18.0"
+  },
+  "devDependencies": {
+    "@discord-framework/typescript-config": "workspace:*",
+    "@types/node": "^22.10.0",
+    "tsup": "^8.5.0",
+    "typescript": "~5.9.3",
+    "vitest": "^3.2.4"
+  }
+}

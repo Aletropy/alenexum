@@ -1,0 +1,26 @@
+{
+  "name": "sandbox-bot",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsx src/index.ts",
+    "start": "node dist/index.js",
+    "lint": "biome check src",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "@discord-framework/core": "workspace:*",
+    "@discord-framework/discord": "workspace:*",
+    "discord.js": "^14.18.0",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "@discord-framework/typescript-config": "workspace:*",
+    "@types/node": "^22.10.0",
+    "tsup": "^8.5.0",
+    "tsx": "^4.19.0",
+    "typescript": "~5.9.3"
+  }
+}
