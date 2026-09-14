@@ -5,6 +5,10 @@ description: Background job scheduler, lifecycle plugin, and bulk loader referen
 
 # API: `@alenexum/jobs`
 
+```bash
+npm install @alenexum/jobs
+```
+
 Depends on `@alenexum/core`. Import from `@alenexum/jobs`.
 
 | Export | Kind | Notes |

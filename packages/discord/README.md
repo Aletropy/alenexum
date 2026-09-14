@@ -2,6 +2,12 @@
 
 Thin transport adapter over discord.js. Owns nothing but adaptation:
 
+## Installation
+
+```bash
+npm install @alenexum/discord discord.js
+```
+
 - `createDiscordConnector(bot, { intents, clientOptions, deploy })` returns a
   core `Connector`: login on `start()`, `interactionCreate` →
   `bot.handleInteraction()`, destroy on `stop()`.

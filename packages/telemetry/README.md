@@ -4,6 +4,12 @@ Opt-in production observability. Zero dependencies, no ports owned, no SDKs
 vendored — the framework emits observations and spans through structural
 hooks; this package consumes them.
 
+## Installation
+
+```bash
+npm install @alenexum/telemetry
+```
+
 ## Metrics
 
 ```ts

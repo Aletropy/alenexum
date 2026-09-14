@@ -5,6 +5,10 @@ description: Discord transport adapter and REST deployment reference.
 
 # API: `@alenexum/discord`
 
+```bash
+npm install @alenexum/discord discord.js
+```
+
 Thin adapter over discord.js. Dependencies: `@alenexum/core`, `discord.js`.
 
 ```ts

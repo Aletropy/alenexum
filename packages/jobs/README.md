@@ -32,6 +32,12 @@ await bot.plugin(jobsPlugin(scheduler));
   `stopTimeoutMs` (default 10s, else `FRAMEWORK_SHUTDOWN_TIMEOUT`).
 - `getStatus(name)` / `getNames()` expose runs, failures, skips, durations.
 
+## Installation
+
+```bash
+npm install @alenexum/jobs
+```
+
 ## Non-goals
 
 - No cron expressions (use `everyMs`; wall-clock schedules can `trigger()`

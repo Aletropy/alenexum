@@ -7,6 +7,14 @@ description: Tutorial — install, register a ping command, and start a Alenexum
 
 This tutorial takes you from zero to a working bot that answers `/ping` with `Pong!`.
 
+## 0. Install the packages
+
+```bash
+npm install @alenexum/core @alenexum/discord discord.js
+```
+
+(`discord.js` is the transport peer — Alenexum composes it, never replaces it. See [Installation](./installation.md) for pnpm/yarn and the opt-in packages.)
+
 ## 1. Configure the token
 
 Alenexum reads no config files for secrets. Pass the token from the environment:

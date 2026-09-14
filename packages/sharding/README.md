@@ -5,6 +5,12 @@ discord.js owns spawning, IPC, and shard state — this package validates
 config, classifies failures, bounds operations with timeouts, and tags
 logs per shard (`shardId` flows into every structured line).
 
+## Installation
+
+```bash
+npm install @alenexum/sharding
+```
+
 ```ts
 import { ShardCoordinator, createShardingManager } from "@alenexum/sharding";
 

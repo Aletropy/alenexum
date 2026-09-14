@@ -1,6 +1,6 @@
 ---
 title: Installation
-description: Requirements and workspace setup for Alenexum.
+description: Install published Alenexum packages from npm, or work from the monorepo.
 ---
 
 # Installation
@@ -8,10 +8,51 @@ description: Requirements and workspace setup for Alenexum.
 ## Requirements
 
 - **Node.js >= 22**
-- **pnpm >= 10** (the repo uses pnpm workspaces; `packageManager: pnpm@11.10.0`)
 - A Discord application token (env-only, never committed)
 
-## Install
+## Install from npm
+
+All packages are published as versioned ESM modules with TypeScript declarations:
+
+```bash
+npm install @alenexum/core @alenexum/discord
+npm install -D @alenexum/testing
+npm install @alenexum/telemetry @alenexum/jobs @alenexum/sharding
+```
+
+With pnpm:
+
+```bash
+pnpm add @alenexum/core @alenexum/discord
+pnpm add -D @alenexum/testing
+pnpm add @alenexum/telemetry @alenexum/jobs @alenexum/sharding
+```
+
+With yarn:
+
+```bash
+yarn add @alenexum/core @alenexum/discord
+yarn add -D @alenexum/testing
+yarn add @alenexum/telemetry @alenexum/jobs @alenexum/sharding
+```
+
+| Package | When you need it | npm |
+|---|---|---|
+| `@alenexum/core` | Always — Bot, routing, middleware, config, logging, errors | [npm](https://www.npmjs.com/package/@alenexum/core) |
+| `@alenexum/discord` | Connecting to Discord + deploying commands | [npm](https://www.npmjs.com/package/@alenexum/discord) |
+| `@alenexum/testing` | Unit/integration tests (dev dependency, zero deps) | [npm](https://www.npmjs.com/package/@alenexum/testing) |
+| `@alenexum/telemetry` | Health checks + metrics (opt-in) | [npm](https://www.npmjs.com/package/@alenexum/telemetry) |
+| `@alenexum/jobs` | Background jobs (opt-in) | [npm](https://www.npmjs.com/package/@alenexum/jobs) |
+| `@alenexum/sharding` | Multi-process sharding (opt-in) | [npm](https://www.npmjs.com/package/@alenexum/sharding) |
+
+Reserved for later phases (empty today, `export {}`, not published):
+`@alenexum/commands`, `@alenexum/events`, `@alenexum/middleware`,
+`@alenexum/components`, `@alenexum/plugins`, `@alenexum/cli`, `@alenexum/all`.
+See [Reserved APIs](../api/reserved.md).
+
+## Work from the monorepo
+
+To contribute or run the sandbox bot, clone the repo (requires pnpm >= 10):
 
 ```bash
 pnpm install
@@ -26,21 +67,8 @@ Useful commands (from the repo root):
 | `pnpm test` | Vitest per package |
 | `pnpm bench` | Hot-path benchmarks (`vitest bench`, informational, uncached) |
 | `pnpm build` | tsup ESM + dts per package |
-| `pnpm ci` | lint + typecheck + test + build |
+| `pnpm ci` | lint + typecheck + test + docs:check + build |
 | `pnpm --filter sandbox-bot dev` | Run the sandbox bot (needs `DISCORD_TOKEN`) |
-
-## Packages
-
-Real, published-shape packages:
-
-- `@alenexum/core` — Bot, routing, middleware, registries, config, logging, errors
-- `@alenexum/discord` — discord.js transport adapter + REST command deployment
-- `@alenexum/testing` — fakes + dispatch harness (zero dependencies, intentionally)
-- `@alenexum/telemetry` — health checks + metrics (opt-in, zero required infra)
-- `@alenexum/jobs` — background job scheduler + lifecycle plugin
-- `@alenexum/sharding` — coordination over discord.js `ShardingManager`
-
-Reserved for later phases (empty today, `export {}`): `@alenexum/commands`, `@alenexum/events`, `@alenexum/middleware`, `@alenexum/components`, `@alenexum/plugins`, `@alenexum/cli`, `@alenexum/all`. See [Reserved APIs](../api/reserved.md).
 
 ## Compatibility
 

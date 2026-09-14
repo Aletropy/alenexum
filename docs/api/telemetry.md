@@ -5,6 +5,10 @@ description: Health checks and metrics primitives reference.
 
 # API: `@alenexum/telemetry`
 
+```bash
+npm install @alenexum/telemetry
+```
+
 Opt-in, dependency-free (peer: `@alenexum/core`). Import from `@alenexum/telemetry`.
 
 **Health** (`health.ts`): `HealthCheckStatus = "pass" | "fail" | "timeout"`, `OverallHealth = "healthy" | "degraded" | "unhealthy"`, `HealthCheckResult/Report/Options`, `HealthCheckFn`, `HealthMonitor { register(name, check, options?), getUptimeMs(), check(), runOne() }` (timeout race, critical→unhealthy/degraded aggregation), `discordClientCheck(client: { isReady() })`.

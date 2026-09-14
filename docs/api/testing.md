@@ -5,6 +5,10 @@ description: Fake interactions, dispatch harness, and log capture reference.
 
 # API: `@alenexum/testing`
 
+```bash
+npm install -D @alenexum/testing
+```
+
 Zero dependencies (avoids a core cycle). Import from `@alenexum/testing`.
 
 **Fakes** (`fakes.ts`): `FakeInteraction` (structural `isChatInputCommand/isButton/is*Select/isModalSubmit/isAutocomplete/is*ContextMenuCommand`, reply/defer/followUp/update/deferUpdate/respond recording), `FakeOptionResolver` (all getters + `getFocused`), `FakeInteractionOptions`, `NonCommandOptions`, factories `createFakeInteraction`, `chatInputInteraction`, `buttonInteraction`, `selectInteraction`, `modalInteraction`, `autocompleteInteraction`, `contextMenuInteraction`.

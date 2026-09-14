@@ -5,6 +5,10 @@ description: Sharding coordination over discord.js ShardingManager.
 
 # API: `@alenexum/sharding`
 
+```bash
+npm install @alenexum/sharding
+```
+
 Depends on `@alenexum/core`, `discord.js`, `zod`. Import from `@alenexum/sharding`.
 
 | Export | Kind | Notes |

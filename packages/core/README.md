@@ -4,6 +4,12 @@ Application architecture for Discord bots. No discord.js dependency — the
 transport is injected via the `Connector` interface (implemented by
 `@alenexum/discord`).
 
+## Installation
+
+```bash
+npm install @alenexum/core
+```
+
 ## API
 
 ```ts

@@ -5,6 +5,10 @@ description: Complete public reference for the core package — Bot, commands, c
 
 # API: `@alenexum/core`
 
+```bash
+npm install @alenexum/core
+```
+
 Import from `@alenexum/core`. Public API is a contract — additive changes only (see [Versioning](../migration/versioning.md)). Internal helpers (`replies.ts` internals, `context.asRecord`) are not re-exported and not documented here.
 
 ## Bot

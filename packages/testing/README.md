@@ -2,6 +2,12 @@
 
 Fakes and integration harness for testing bots. No network, no tokens, deterministic.
 
+## Installation
+
+```bash
+npm install -D @alenexum/testing
+```
+
 ## Pyramid
 
 | Layer | Where | What |
