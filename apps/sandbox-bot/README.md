@@ -25,10 +25,17 @@ pnpm --filter sandbox-bot dev
 | `/search query` | Autocomplete handler with filtered choices |
 | `/server` | Guild-only guard demo (`requireGuild`) |
 | `/hello [name]` | Module demo: command + service from the greetings module |
+| `/stats` | Dispatch metrics snapshot (in-process registry) |
+| `/health` | Health report: gateway, services, uptime, active dispatches |
+| `/jobs` | Background job stats (runs, failures, skips) |
 
 > `/echo` has a 10s per-user cooldown — repeat it quickly to see the deny path.
 | `/boom` | Failure injection: handler throws → error boundary, structured log, recovery reply |
 | `/slow` | Slow op: defers, waits 2s, follows up (try `Ctrl+C` mid-flight for shutdown behavior) |
+| `/flood` | Concurrency: 5 parallel follow-ups after one defer |
+| `/timeout` | Long op: 8s of deferred work |
+| `/dupe` | Double-ack injection: live `FRAMEWORK_INTERACTION_ALREADY_ACKNOWLEDGED` |
+| `/poll` | discord.js collector via escape hatch (first vote wins, 15s window) |
 
 ## Context menus
 

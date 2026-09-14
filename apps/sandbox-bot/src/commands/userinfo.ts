@@ -1,4 +1,4 @@
-import { defineCommand, userOption } from "@discord-framework/core";
+import { defineCommand, userOption } from "@nexum/core";
 
 export const userinfoCommand = defineCommand({
   name: "userinfo",
@@ -10,3 +10,5 @@ export const userinfoCommand = defineCommand({
     await ctx.reply(`User id: ${ctx.options.target.id}`);
   },
 });
+
+export default userinfoCommand;

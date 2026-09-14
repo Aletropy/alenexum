@@ -1,4 +1,4 @@
-import { defineCommand } from "@discord-framework/core";
+import { defineCommand } from "@nexum/core";
 import {
   ActionRowBuilder,
   ButtonBuilder,
@@ -26,3 +26,5 @@ export const voteCommand = defineCommand({
     await interaction.reply({ content: "Vote!", components: [row] });
   },
 });
+
+export default voteCommand;

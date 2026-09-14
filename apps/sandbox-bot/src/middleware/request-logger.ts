@@ -1,15 +1,17 @@
-import type { Middleware } from "@discord-framework/core";
+import type { Middleware } from "@nexum/core";
 
-/** Global middleware seed: logs receipt of every command with its requestId. */
+/** Global middleware seed: logs every interaction with its route and requestId. */
 export const requestLogger: Middleware = async (ctx, next) => {
   const startedAt = Date.now();
   ctx.logger.debug(
-    { event: "command.received" },
-    `Received command "${ctx.commandName}"`,
+    { event: "interaction.received" },
+    `Received "${ctx.route}"`,
   );
   await next();
   ctx.logger.debug(
-    { event: "command.middlewareDone", durationMs: Date.now() - startedAt },
-    `Middleware chain done for "${ctx.commandName}"`,
+    { event: "interaction.middlewareDone", durationMs: Date.now() - startedAt },
+    `Middleware chain done for "${ctx.route}"`,
   );
 };
+
+export default requestLogger;

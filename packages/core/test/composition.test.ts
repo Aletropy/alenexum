@@ -1,23 +1,10 @@
-import { Writable } from "node:stream";
+import { createFakeInteraction, LogCapture } from "@nexum/testing";
 import { describe, expect, it } from "vitest";
 import { Bot } from "../src/bot.js";
 import { FrameworkError } from "../src/errors.js";
 import { createLogger } from "../src/logger.js";
 import { defineModule } from "../src/modules.js";
 import { definePlugin } from "../src/plugin.js";
-import { createFakeInteraction } from "./helpers.js";
-
-class MemoryStream extends Writable {
-  lines: string[] = [];
-  override _write(
-    chunk: unknown,
-    _encoding: BufferEncoding,
-    callback: (error?: Error | null) => void,
-  ): void {
-    this.lines.push(String(chunk));
-    callback();
-  }
-}
 
 describe("defineModule / definePlugin", () => {
   it("preserve literal names", () => {
@@ -114,7 +101,7 @@ describe("modules", () => {
 
 describe("plugin host", () => {
   it("exposes the full registration surface with a tagged logger", async () => {
-    const dest = new MemoryStream();
+    const dest = new LogCapture();
     const bot = new Bot({
       token: "t",
       logger: createLogger({ level: "debug", destination: dest }),
@@ -154,9 +141,7 @@ describe("plugin host", () => {
       }),
     );
     expect(seen).not.toContain("hook");
-    const tagged = dest.lines
-      .map((line) => JSON.parse(line) as Record<string, unknown>)
-      .find((line) => line.event === "audit.ready");
+    const tagged = dest.events("audit.ready")[0];
     expect(tagged?.plugin).toBe("audit");
 
     await bot.start();

@@ -1,4 +1,8 @@
-/** Minimal structural fake of a discord.js chat-input interaction. */
+/**
+ * Structural fakes of discord.js interactions for unit and integration
+ * tests. No network, no client, deterministic. For full dispatch flows see
+ * `./harness.js`.
+ */
 
 export interface FakeInteractionOptions {
   commandName?: string;
@@ -292,4 +296,96 @@ export function createFakeInteraction(
 
 function asArray(bits: bigint | bigint[]): bigint[] {
   return Array.isArray(bits) ? bits : [bits];
+}
+
+type NonCommandOptions = Omit<
+  FakeInteractionOptions,
+  "chatInput" | "kinds" | "commandName"
+>;
+
+export type { NonCommandOptions };
+
+/** Chat-input interaction (the default kind). */
+export function chatInputInteraction(
+  commandName: string,
+  options: Omit<
+    FakeInteractionOptions,
+    "chatInput" | "kinds" | "commandName"
+  > = {},
+): FakeInteraction {
+  return createFakeInteraction({ ...options, commandName, chatInput: true });
+}
+
+/** Button interaction for `customId`. */
+export function buttonInteraction(
+  customId: string,
+  options: NonCommandOptions = {},
+): FakeInteraction {
+  return createFakeInteraction({
+    ...options,
+    chatInput: false,
+    customId,
+    kinds: { button: true },
+  });
+}
+
+/** String-select interaction with selected `values`. */
+export function selectInteraction(
+  customId: string,
+  values: string[] = [],
+  options: NonCommandOptions = {},
+): FakeInteraction {
+  return createFakeInteraction({
+    ...options,
+    chatInput: false,
+    customId,
+    values,
+    kinds: { stringSelect: true },
+  });
+}
+
+/** Modal-submit interaction with submitted text inputs. */
+export function modalInteraction(
+  customId: string,
+  fieldValues: Record<string, string> = {},
+  options: NonCommandOptions = {},
+): FakeInteraction {
+  return createFakeInteraction({
+    ...options,
+    chatInput: false,
+    customId,
+    fieldValues,
+    kinds: { modal: true },
+  });
+}
+
+/** Autocomplete interaction with a focused option. */
+export function autocompleteInteraction(
+  commandName: string,
+  focused: { name: string; value: string | number },
+  optionValues: Record<string, unknown> = {},
+  options: NonCommandOptions = {},
+): FakeInteraction {
+  return createFakeInteraction({
+    ...options,
+    commandName,
+    chatInput: false,
+    focused,
+    optionValues,
+    kinds: { autocomplete: true },
+  });
+}
+
+/** User or message context-menu interaction. */
+export function contextMenuInteraction(
+  type: "user" | "message",
+  name: string,
+  options: NonCommandOptions = {},
+): FakeInteraction {
+  return createFakeInteraction({
+    ...options,
+    commandName: name,
+    chatInput: false,
+    kinds: type === "user" ? { userMenu: true } : { messageMenu: true },
+  });
 }

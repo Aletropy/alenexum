@@ -1,6 +1,7 @@
 import { z } from "zod";
 import type { Connector } from "./connector.js";
 import { FrameworkError } from "./errors.js";
+import type { DispatchObserver, TracerLike } from "./instrumentation.js";
 import type { FrameworkLogger } from "./logger.js";
 
 const ConnectorSchema = z.custom<Connector>(
@@ -19,6 +20,20 @@ const LoggerSchema = z.custom<FrameworkLogger>(
     typeof (value as FrameworkLogger).child === "function",
 );
 
+const TracerSchema = z.custom<TracerLike>(
+  (value): value is TracerLike =>
+    typeof value === "object" &&
+    value !== null &&
+    typeof (value as TracerLike).startSpan === "function",
+);
+
+const ObserverSchema = z.custom<DispatchObserver>(
+  (value): value is DispatchObserver =>
+    typeof value === "object" &&
+    value !== null &&
+    typeof (value as DispatchObserver).observe === "function",
+);
+
 export const BotOptionsSchema = z.object({
   /** Bot token. Validated, held for the connector, never logged. */
   token: z.string().min(1, "token must be a non-empty string"),
@@ -28,6 +43,10 @@ export const BotOptionsSchema = z.object({
   logger: LoggerSchema.optional(),
   /** Upper bound for graceful shutdown before FRAMEWORK_SHUTDOWN_TIMEOUT. */
   shutdownTimeoutMs: z.number().int().positive().default(10_000),
+  /** Distributed tracer (structural; an OTel tracer satisfies it). Off when omitted. */
+  tracer: TracerSchema.optional(),
+  /** Per-dispatch observation sink (metrics, audit). Off when omitted. */
+  observer: ObserverSchema.optional(),
 });
 
 export type BotOptions = z.input<typeof BotOptionsSchema>;

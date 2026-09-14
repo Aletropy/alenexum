@@ -1,9 +1,9 @@
+import { createFakeInteraction } from "@nexum/testing";
 import { describe, expect, it, vi } from "vitest";
 import { createCommandContext } from "../src/context.js";
 import { createLogger } from "../src/logger.js";
 import { compose } from "../src/middleware.js";
 import { ServiceContainer } from "../src/services.js";
-import { createFakeInteraction } from "./helpers.js";
 
 function makeCtx() {
   return createCommandContext({

@@ -1,3 +1,4 @@
+import { createFakeInteraction } from "@nexum/testing";
 import { describe, expect, it } from "vitest";
 import { Bot } from "../src/bot.js";
 import { createLogger } from "../src/logger.js";
@@ -8,7 +9,6 @@ import {
   requireUserIds,
   requireUserPermissions,
 } from "../src/permissions.js";
-import { createFakeInteraction } from "./helpers.js";
 
 const BAN = 4n;
 const MANAGE = 8n;

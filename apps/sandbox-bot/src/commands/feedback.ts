@@ -1,4 +1,4 @@
-import { defineCommand } from "@discord-framework/core";
+import { defineCommand } from "@nexum/core";
 import {
   ActionRowBuilder,
   type ChatInputCommandInteraction,
@@ -27,3 +27,5 @@ export const feedbackCommand = defineCommand({
     await interaction.showModal(modal);
   },
 });
+
+export default feedbackCommand;

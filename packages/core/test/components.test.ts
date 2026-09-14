@@ -1,3 +1,4 @@
+import { createFakeInteraction } from "@nexum/testing";
 import { describe, expect, expectTypeOf, it } from "vitest";
 import { Bot } from "../src/bot.js";
 import {
@@ -7,7 +8,6 @@ import {
 } from "../src/components.js";
 import { createLogger } from "../src/logger.js";
 import { CustomIdRegistry } from "../src/registry.js";
-import { createFakeInteraction } from "./helpers.js";
 
 function testBot() {
   return new Bot({

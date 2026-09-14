@@ -1,2 +1,2 @@
-// @discord-framework/middleware — reserved for a later phase. Intentionally empty.
+// @nexum/middleware — reserved for a later phase. Intentionally empty.
 export {};

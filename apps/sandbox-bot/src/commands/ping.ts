@@ -1,4 +1,4 @@
-import { defineCommand } from "@discord-framework/core";
+import { defineCommand } from "@nexum/core";
 
 export const pingCommand = defineCommand({
   name: "ping",
@@ -7,3 +7,5 @@ export const pingCommand = defineCommand({
     await ctx.reply("Pong!");
   },
 });
+
+export default pingCommand;

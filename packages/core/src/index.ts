@@ -1,5 +1,5 @@
 /**
- * `@discord-framework/core` — application architecture for Discord bots.
+ * `@nexum/core` — application architecture for Discord bots.
  *
  * discord.js owns the network (Gateway, REST, caches, builders). This package
  * owns lifecycle, routing, middleware, registries, config, logging, and
@@ -84,6 +84,7 @@ export {
   type FrameworkErrorCode,
   type FrameworkErrorContext,
   type FrameworkErrorInit,
+  formatFrameworkError,
   isFrameworkError,
   serializeError,
   toFrameworkError,
@@ -100,6 +101,39 @@ export {
   normalizeGuard,
   runGuards,
 } from "./guards.js";
+export {
+  type DispatchKind,
+  type DispatchObservation,
+  type DispatchObserver,
+  type DispatchOutcome,
+  SPAN_ERROR,
+  SPAN_OK,
+  SPAN_UNSET,
+  type SpanAttributeValue,
+  type SpanLike,
+  type SpanStatusCode,
+  type StartSpanOptions,
+  type TracerLike,
+} from "./instrumentation.js";
+export {
+  type LoadDefinitionsOptions,
+  type LoadedDefinition,
+  type LoadOptions,
+  type LoadReport,
+  loadAutocomplete,
+  loadCommands,
+  loadComponents,
+  loadContextMenus,
+  loadDefinitions,
+  loadGuards,
+  loadMiddleware,
+  loadModals,
+  loadModules,
+  loadPlugins,
+  type ModuleLoaderHost,
+  type PluginLoaderHost,
+  type SyncLoaderHost,
+} from "./loader.js";
 export {
   type CreateLoggerOptions,
   createLogger,

@@ -1,5 +1,5 @@
 /**
- * Transport connector (implemented by `@discord-framework/discord`).
+ * Transport connector (implemented by `@nexum/discord`).
  *
  * Core owns the lifecycle and dispatch; the connector owns the network
  * (discord.js login, event wiring, teardown). This keeps core free of any

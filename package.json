@@ -1,5 +1,5 @@
 {
-  "name": "discord-framework",
+  "name": "nexum",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -15,6 +15,7 @@
     "lint:fix": "biome check --write .",
     "format": "biome format --write .",
     "typecheck": "turbo run typecheck",
+    "bench": "turbo run bench",
     "ci": "pnpm lint && pnpm typecheck && pnpm test && pnpm build",
     "dev:sandbox": "pnpm --filter sandbox-bot dev"
   },

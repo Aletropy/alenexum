@@ -1,4 +1,4 @@
-# Discord Application Framework
+# Nexum
 
 TypeScript application framework for Discord bots — from tiny bots to enterprise-scale systems.
 
@@ -17,7 +17,11 @@ registries, modules, plugins, config, logging, diagnostics, and testing.
 ```text
 packages/core       # Bot, lifecycle, config, errors, logger, registry, middleware, context, DI-lite
 packages/discord    # Thin discord.js transport adapter (Connector) + REST command deployment
-packages/{commands,events,middleware,components,plugins,testing,telemetry,sharding,cli,all}
+packages/testing    # Fakes + integration harness (dependency-free)
+packages/telemetry  # Metrics, health checks (opt-in, zero deps)
+packages/jobs       # Background jobs: scheduler, timeouts, overlap, lifecycle plugin
+packages/sharding   # Lifecycle + typed eval over discord.js ShardingManager
+packages/{commands,events,middleware,components,plugins,cli,all}
                     # Reserved stubs for later phases
 apps/sandbox-bot    # Living stress harness (ping, boom, slow, middleware, shutdown)
 tooling/            # Shared TypeScript config
@@ -26,7 +30,7 @@ tooling/            # Shared TypeScript config
 ## Quick start
 
 ```ts
-import { Bot } from "@discord-framework/core";
+import { Bot } from "@nexum/core";
 
 const bot = new Bot({ token: process.env.DISCORD_TOKEN! });
 bot.command({
@@ -55,6 +59,7 @@ pnpm --filter sandbox-bot dev
 | `pnpm lint` | Biome check |
 | `pnpm typecheck` | `tsc --noEmit` per package |
 | `pnpm test` | Vitest per package |
+| `pnpm bench` | Hot-path benchmarks (`vitest bench`, informational, uncached) |
 | `pnpm build` | tsup ESM + dts per package |
 | `pnpm ci` | lint + typecheck + test + build |
 

@@ -1,2 +1,2 @@
-// @discord-framework/events — reserved for a later phase. Intentionally empty.
+// @nexum/events — reserved for a later phase. Intentionally empty.
 export {};

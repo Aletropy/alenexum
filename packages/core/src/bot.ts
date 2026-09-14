@@ -48,6 +48,12 @@ import {
   normalizeGuard,
   runGuards,
 } from "./guards.js";
+import {
+  type DispatchKind,
+  type DispatchOutcome,
+  SPAN_ERROR,
+  type SpanLike,
+} from "./instrumentation.js";
 import { createLogger, type FrameworkLogger } from "./logger.js";
 import { compose, type Middleware } from "./middleware.js";
 import {
@@ -88,6 +94,8 @@ export interface DispatchSuccess {
 
 export interface DispatchFailure {
   readonly ok: false;
+  /** Route key, same semantics as success ("" when the route is unknown). */
+  readonly command: string;
   readonly error: FrameworkError;
   readonly durationMs: number;
   readonly requestId: string;
@@ -132,6 +140,8 @@ export class Bot implements PluginHost {
   };
   private connector: Connector | undefined;
   private status: BotStatus = "idle";
+  /** In-flight dispatches, drained by stop(). */
+  private activeDispatches = 0;
 
   constructor(options: BotOptions) {
     const config = resolveConfig(options);
@@ -398,6 +408,11 @@ export class Bot implements PluginHost {
     return this.contextMenus.values();
   }
 
+  /** In-flight dispatch count, for health checks and shutdown visibility. */
+  getActiveDispatchCount(): number {
+    return this.activeDispatches;
+  }
+
   // -- lifecycle -----------------------------------------------------------
 
   async start(): Promise<void> {
@@ -450,15 +465,21 @@ export class Bot implements PluginHost {
       { subsystem: "lifecycle", event: "bot.stopping" },
       "Bot stopping",
     );
+    // One shared budget for the whole sequence: hooks, in-flight drain,
+    // connector teardown. Exceeding it fails loudly, never hangs.
+    const deadline = Date.now() + this.config.shutdownTimeoutMs;
     try {
-      await this.withTimeout(
-        (async () => {
-          await this.runHooks("beforeStop");
-          await this.connector?.stop();
-          await this.runHooks("afterStop");
-        })(),
-        this.config.shutdownTimeoutMs,
-        "bot.stop",
+      await this.runHooks("beforeStop");
+      await this.drainDispatches(deadline);
+      await this.withDeadline(
+        this.connector?.stop() ?? Promise.resolve(),
+        deadline,
+        "connector.stop",
+      );
+      await this.withDeadline(
+        this.runHooks("afterStop"),
+        deadline,
+        "bot.stop hooks",
       );
     } finally {
       this.status = "stopped";
@@ -467,6 +488,51 @@ export class Bot implements PluginHost {
       { subsystem: "lifecycle", event: "bot.stopped" },
       "Bot stopped",
     );
+  }
+
+  /** Wait for in-flight dispatches, bounded by the shutdown deadline. */
+  private async drainDispatches(deadline: number): Promise<void> {
+    while (this.activeDispatches > 0) {
+      const remainingMs = deadline - Date.now();
+      if (remainingMs <= 0) {
+        throw shutdownTimeoutError(
+          `draining ${this.activeDispatches} in-flight dispatch(es)`,
+          this.config.shutdownTimeoutMs,
+        );
+      }
+      await new Promise<void>((resolve) =>
+        setTimeout(resolve, Math.min(10, remainingMs)),
+      );
+    }
+  }
+
+  private async withDeadline(
+    promise: Promise<void>,
+    deadline: number,
+    operation: string,
+  ): Promise<void> {
+    const remainingMs = deadline - Date.now();
+    if (remainingMs <= 0) {
+      throw shutdownTimeoutError(operation, this.config.shutdownTimeoutMs);
+    }
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    try {
+      await Promise.race([
+        promise,
+        new Promise<never>((_, reject) => {
+          timer = setTimeout(() => {
+            reject(
+              shutdownTimeoutError(operation, this.config.shutdownTimeoutMs),
+            );
+          }, remainingMs);
+          timer.unref?.();
+        }),
+      ]);
+    } finally {
+      if (timer !== undefined) {
+        clearTimeout(timer);
+      }
+    }
   }
 
   private async startConnector(): Promise<void> {
@@ -522,50 +588,12 @@ export class Bot implements PluginHost {
     }
   }
 
-  private async withTimeout(
-    promise: Promise<void>,
-    ms: number,
-    operation: string,
-  ): Promise<void> {
-    let timer: ReturnType<typeof setTimeout> | undefined;
-    try {
-      await Promise.race([
-        promise,
-        new Promise<never>((_, reject) => {
-          timer = setTimeout(() => {
-            reject(
-              new FrameworkError({
-                code: "FRAMEWORK_SHUTDOWN_TIMEOUT",
-                category: "Internal",
-                message: `Timed out waiting for ${operation} after ${ms}ms`,
-                context: { subsystem: "lifecycle", event: "bot.stop" },
-                diagnostic: {
-                  likelyCause:
-                    "A beforeStop/afterStop hook or the connector did not settle in time.",
-                  suggestedInvestigation: [
-                    "Identify slow hooks or in-flight work blocking shutdown.",
-                    "Increase shutdownTimeoutMs if long drains are expected.",
-                  ],
-                },
-              }),
-            );
-          }, ms);
-          timer.unref?.();
-        }),
-      ]);
-    } finally {
-      if (timer !== undefined) {
-        clearTimeout(timer);
-      }
-    }
-  }
-
   // -- dispatch (hot path) ---------------------------------------------------
 
   /**
    * Route one interaction to its handler (slash command, component, modal,
    * autocomplete, or context menu). Never throws: failures are logged with
-   * full context and returned as `{ ok: false, error }`.
+   * full context and returned as `{ ok: false, command, error }`.
    */
   async handleInteraction(
     rawInteraction: unknown,
@@ -574,58 +602,113 @@ export class Bot implements PluginHost {
     const requestId = randomUUID();
     const startedAt = Date.now();
 
-    if (isChatInputCommandInteraction(rawInteraction)) {
-      return this.dispatchCommand(
-        rawInteraction,
-        rawClient,
-        requestId,
-        startedAt,
+    this.activeDispatches += 1;
+    try {
+      if (isChatInputCommandInteraction(rawInteraction)) {
+        return await this.dispatchCommand(
+          rawInteraction,
+          rawClient,
+          requestId,
+          startedAt,
+        );
+      }
+      if (interactionFlag(rawInteraction, "isAutocomplete")) {
+        return await this.dispatchAutocomplete(
+          rawInteraction,
+          rawClient,
+          requestId,
+          startedAt,
+        );
+      }
+      if (interactionFlag(rawInteraction, "isModalSubmit")) {
+        return await this.dispatchModal(
+          rawInteraction,
+          rawClient,
+          requestId,
+          startedAt,
+        );
+      }
+      const menuType = detectContextMenuType(rawInteraction);
+      if (menuType !== undefined) {
+        return await this.dispatchContextMenu(
+          rawInteraction,
+          rawClient,
+          menuType,
+          requestId,
+          startedAt,
+        );
+      }
+      if (isComponentInteraction(rawInteraction)) {
+        return await this.dispatchComponent(
+          rawInteraction,
+          rawClient,
+          requestId,
+          startedAt,
+        );
+      }
+      this.logger.debug(
+        { subsystem: "dispatch", event: "interaction.ignored", requestId },
+        "Ignoring unrecognized interaction",
       );
-    }
-    if (interactionFlag(rawInteraction, "isAutocomplete")) {
-      return this.dispatchAutocomplete(
-        rawInteraction,
-        rawClient,
+      return {
+        ok: true,
+        command: "",
+        durationMs: Date.now() - startedAt,
         requestId,
-        startedAt,
-      );
+      };
+    } finally {
+      this.activeDispatches -= 1;
     }
-    if (interactionFlag(rawInteraction, "isModalSubmit")) {
-      return this.dispatchModal(
-        rawInteraction,
-        rawClient,
+  }
+
+  /** Start a dispatch span. A throwing tracer never breaks dispatch. */
+  private startSpan(
+    kind: DispatchKind,
+    route: string,
+    requestId: string,
+  ): SpanLike | undefined {
+    const tracer = this.config.tracer;
+    if (tracer === undefined) {
+      return undefined;
+    }
+    try {
+      return tracer.startSpan("framework.dispatch", {
+        attributes: {
+          "framework.kind": kind,
+          "framework.route": route,
+          "framework.request_id": requestId,
+        },
+      });
+    } catch {
+      return undefined;
+    }
+  }
+
+  /** Report one observation. A throwing observer never breaks dispatch. */
+  private observe(
+    route: string,
+    kind: DispatchKind,
+    outcome: DispatchOutcome,
+    startedAt: number,
+    requestId: string,
+    extra?: { errorCode?: string | undefined; guard?: string | undefined },
+  ): void {
+    const observer = this.config.observer;
+    if (observer === undefined) {
+      return;
+    }
+    try {
+      observer.observe({
+        route,
+        kind,
+        outcome,
+        durationMs: Date.now() - startedAt,
         requestId,
-        startedAt,
-      );
+        ...extra,
+      });
+    } catch {
+      // Metrics must never break dispatch; the observer owns its own logging.
     }
-    const menuType = detectContextMenuType(rawInteraction);
-    if (menuType !== undefined) {
-      return this.dispatchContextMenu(
-        rawInteraction,
-        rawClient,
-        menuType,
-        requestId,
-        startedAt,
-      );
-    }
-    if (isComponentInteraction(rawInteraction)) {
-      return this.dispatchComponent(
-        rawInteraction,
-        rawClient,
-        requestId,
-        startedAt,
-      );
-    }
-    this.logger.debug(
-      { subsystem: "dispatch", event: "interaction.ignored", requestId },
-      "Ignoring unrecognized interaction",
-    );
-    return {
-      ok: true,
-      command: "",
-      durationMs: Date.now() - startedAt,
-      requestId,
-    };
   }
 
   private async dispatchCommand(
@@ -635,6 +718,11 @@ export class Bot implements PluginHost {
     startedAt: number,
   ): Promise<DispatchResult> {
     const commandName = this.peekCommandName(rawInteraction);
+    const span = this.startSpan(
+      "command",
+      commandName ?? "<unknown>",
+      requestId,
+    );
     try {
       const definition =
         commandName !== undefined ? this.registry.get(commandName) : undefined;
@@ -683,12 +771,20 @@ export class Bot implements PluginHost {
       await compose<CommandContext>(chain)(dispatchCtx, stage.run);
       const denied = stage.decision();
       if (denied === undefined) {
+        this.observe(
+          definition.name,
+          "command",
+          "success",
+          startedAt,
+          requestId,
+        );
         const durationMs = Date.now() - startedAt;
         scoped.info({ durationMs }, `Command "${definition.name}" completed`);
         return { ok: true, command: definition.name, durationMs, requestId };
       }
       return this.denyDispatch({
         route: definition.name,
+        kind: "command",
         event: "command.denied",
         reply: dispatchCtx.reply,
         decision: denied,
@@ -696,8 +792,11 @@ export class Bot implements PluginHost {
         startedAt,
       });
     } catch (error) {
+      span?.recordException(error);
+      span?.setStatus({ code: SPAN_ERROR });
       return this.failDispatch({
         route: commandName ?? "<unknown>",
+        kind: "command",
         event: "command.failed",
         rawInteraction,
         requestId,
@@ -708,6 +807,8 @@ export class Bot implements PluginHost {
             ? `Command "${commandName}" failed`
             : "Command dispatch failed",
       });
+    } finally {
+      span?.end();
     }
   }
 
@@ -718,6 +819,11 @@ export class Bot implements PluginHost {
     startedAt: number,
   ): Promise<DispatchResult> {
     const customId = this.peekCustomId(rawInteraction);
+    const span = this.startSpan(
+      "component",
+      customId ?? "<unknown>",
+      requestId,
+    );
     try {
       if (customId === undefined) {
         throw missingComponentError(
@@ -790,12 +896,14 @@ export class Bot implements PluginHost {
       await compose<ComponentContext>(chain)(dispatchCtx, stage.run);
       const denied = stage.decision();
       if (denied === undefined) {
+        this.observe(customId, "component", "success", startedAt, requestId);
         const durationMs = Date.now() - startedAt;
         scoped.info({ durationMs }, `Component "${customId}" completed`);
         return { ok: true, command: customId, durationMs, requestId };
       }
       return this.denyDispatch({
         route: customId,
+        kind: "component",
         event: "component.denied",
         reply: dispatchCtx.reply,
         decision: denied,
@@ -803,8 +911,11 @@ export class Bot implements PluginHost {
         startedAt,
       });
     } catch (error) {
+      span?.recordException(error);
+      span?.setStatus({ code: SPAN_ERROR });
       return this.failDispatch({
         route: customId ?? "<unknown>",
+        kind: "component",
         event: "component.failed",
         rawInteraction,
         requestId,
@@ -812,6 +923,8 @@ export class Bot implements PluginHost {
         error,
         fallbackMessage: `Component "${customId ?? "<unknown>"}" failed`,
       });
+    } finally {
+      span?.end();
     }
   }
 
@@ -822,6 +935,7 @@ export class Bot implements PluginHost {
     startedAt: number,
   ): Promise<DispatchResult> {
     const customId = this.peekCustomId(rawInteraction);
+    const span = this.startSpan("modal", customId ?? "<unknown>", requestId);
     try {
       if (customId === undefined) {
         throw missingModalError(
@@ -868,12 +982,14 @@ export class Bot implements PluginHost {
       await compose<ModalContext>(chain)(dispatchCtx, stage.run);
       const denied = stage.decision();
       if (denied === undefined) {
+        this.observe(customId, "modal", "success", startedAt, requestId);
         const durationMs = Date.now() - startedAt;
         scoped.info({ durationMs }, `Modal "${customId}" completed`);
         return { ok: true, command: customId, durationMs, requestId };
       }
       return this.denyDispatch({
         route: customId,
+        kind: "modal",
         event: "modal.denied",
         reply: dispatchCtx.reply,
         decision: denied,
@@ -881,8 +997,11 @@ export class Bot implements PluginHost {
         startedAt,
       });
     } catch (error) {
+      span?.recordException(error);
+      span?.setStatus({ code: SPAN_ERROR });
       return this.failDispatch({
         route: customId ?? "<unknown>",
+        kind: "modal",
         event: "modal.failed",
         rawInteraction,
         requestId,
@@ -890,6 +1009,8 @@ export class Bot implements PluginHost {
         error,
         fallbackMessage: `Modal "${customId ?? "<unknown>"}" failed`,
       });
+    } finally {
+      span?.end();
     }
   }
 
@@ -900,6 +1021,7 @@ export class Bot implements PluginHost {
     startedAt: number,
   ): Promise<DispatchResult> {
     const commandName = this.peekCommandName(rawInteraction) ?? "<unknown>";
+    const span = this.startSpan("autocomplete", commandName, requestId);
     try {
       const focused = extractFocusedOption(rawInteraction, {
         command: commandName,
@@ -974,14 +1096,24 @@ export class Bot implements PluginHost {
       }
 
       const durationMs = Date.now() - startedAt;
+      this.observe(
+        commandName,
+        "autocomplete",
+        "success",
+        startedAt,
+        requestId,
+      );
       scoped.info(
         { durationMs },
         `Autocomplete for "${commandName}" completed`,
       );
       return { ok: true, command: commandName, durationMs, requestId };
     } catch (error) {
+      span?.recordException(error);
+      span?.setStatus({ code: SPAN_ERROR });
       return this.failDispatch({
         route: commandName,
+        kind: "autocomplete",
         event: "autocomplete.failed",
         rawInteraction,
         requestId,
@@ -989,6 +1121,8 @@ export class Bot implements PluginHost {
         error,
         fallbackMessage: `Autocomplete for "${commandName}" failed`,
       });
+    } finally {
+      span?.end();
     }
   }
 
@@ -1000,6 +1134,7 @@ export class Bot implements PluginHost {
     startedAt: number,
   ): Promise<DispatchResult> {
     const name = this.peekCommandName(rawInteraction);
+    const span = this.startSpan("contextmenu", name ?? "<unknown>", requestId);
     try {
       if (name === undefined) {
         throw missingContextMenuError(
@@ -1044,12 +1179,14 @@ export class Bot implements PluginHost {
       await compose<ContextMenuContext>(chain)(dispatchCtx, stage.run);
       const denied = stage.decision();
       if (denied === undefined) {
+        this.observe(name, "contextmenu", "success", startedAt, requestId);
         const durationMs = Date.now() - startedAt;
         scoped.info({ durationMs }, `Context-menu "${name}" completed`);
         return { ok: true, command: name, durationMs, requestId };
       }
       return this.denyDispatch({
         route: name,
+        kind: "contextmenu",
         event: "contextmenu.denied",
         reply: dispatchCtx.reply,
         decision: denied,
@@ -1057,8 +1194,11 @@ export class Bot implements PluginHost {
         startedAt,
       });
     } catch (error) {
+      span?.recordException(error);
+      span?.setStatus({ code: SPAN_ERROR });
       return this.failDispatch({
         route: name ?? "<unknown>",
+        kind: "contextmenu",
         event: "contextmenu.failed",
         rawInteraction,
         requestId,
@@ -1066,6 +1206,8 @@ export class Bot implements PluginHost {
         error,
         fallbackMessage: `Context-menu "${name ?? "<unknown>"}" failed`,
       });
+    } finally {
+      span?.end();
     }
   }
 
@@ -1098,6 +1240,7 @@ export class Bot implements PluginHost {
   /** Graceful deny: user message, observability log, ok result. Never throws. */
   private async denyDispatch(init: {
     route: string;
+    kind: DispatchKind;
     event: string;
     reply: (message: string) => Promise<void>;
     decision: GuardDecision;
@@ -1129,6 +1272,16 @@ export class Bot implements PluginHost {
         durationMs,
       },
       `Denied by guard "${init.decision.guard}"`,
+    );
+    this.observe(
+      init.route,
+      init.kind,
+      "denied",
+      init.startedAt,
+      init.requestId,
+      {
+        guard: init.decision.guard,
+      },
     );
     return {
       ok: true,
@@ -1165,12 +1318,16 @@ export class Bot implements PluginHost {
       { event: "autocomplete.denied", guard: decision.guard, durationMs },
       `Denied by guard "${decision.guard}"`,
     );
+    this.observe(route, "autocomplete", "denied", startedAt, requestId, {
+      guard: decision.guard,
+    });
     return { ok: true, command: route, durationMs, requestId };
   }
 
   /** Shared failure path: classify, log with context, recover, return. */
   private async failDispatch(init: {
     route: string;
+    kind: DispatchKind;
     event: string;
     rawInteraction: unknown;
     requestId: string;
@@ -1218,8 +1375,19 @@ export class Bot implements PluginHost {
       frameworkError.message,
     );
     await this.tryRecover(init.rawInteraction, init.requestId);
+    this.observe(
+      init.route,
+      init.kind,
+      "error",
+      init.startedAt,
+      init.requestId,
+      {
+        errorCode: frameworkError.code,
+      },
+    );
     return {
       ok: false,
+      command: init.route,
       error: frameworkError,
       durationMs,
       requestId: init.requestId,
@@ -1290,6 +1458,26 @@ export class Bot implements PluginHost {
       );
     }
   }
+}
+
+function shutdownTimeoutError(
+  operation: string,
+  budgetMs: number,
+): FrameworkError {
+  return new FrameworkError({
+    code: "FRAMEWORK_SHUTDOWN_TIMEOUT",
+    category: "Internal",
+    message: `Timed out waiting for ${operation} after ${budgetMs}ms`,
+    context: { subsystem: "lifecycle", event: "bot.stop" },
+    diagnostic: {
+      likelyCause:
+        "A hook, the in-flight dispatch drain, or the connector did not settle within shutdownTimeoutMs.",
+      suggestedInvestigation: [
+        "Identify slow hooks or in-flight work blocking shutdown.",
+        "Increase shutdownTimeoutMs if long drains are expected.",
+      ],
+    },
+  });
 }
 
 function describeAutocompleteTarget(

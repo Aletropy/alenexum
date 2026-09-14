@@ -1,29 +1,26 @@
 import "dotenv/config";
+import { fileURLToPath } from "node:url";
 import {
   Bot,
   createLogger,
   type FrameworkLogLevel,
-} from "@discord-framework/core";
-import { createDiscordConnector } from "@discord-framework/discord";
+  loadAutocomplete,
+  loadCommands,
+  loadComponents,
+  loadContextMenus,
+  loadMiddleware,
+  loadModals,
+  loadModules,
+  loadPlugins,
+} from "@nexum/core";
+import { createDiscordConnector } from "@nexum/discord";
+import { JobScheduler, jobsPlugin, loadJobs } from "@nexum/jobs";
+import {
+  createDispatchMetrics,
+  discordClientCheck,
+  HealthMonitor,
+} from "@nexum/telemetry";
 import { GatewayIntentBits } from "discord.js";
-import { searchAutocomplete } from "./autocomplete/search.js";
-import { addCommand } from "./commands/add.js";
-import { boomCommand, slowCommand } from "./commands/boom.js";
-import { colorCommand } from "./commands/color.js";
-import { echoCommand } from "./commands/echo.js";
-import { feedbackCommand } from "./commands/feedback.js";
-import { pingCommand } from "./commands/ping.js";
-import { searchCommand } from "./commands/search.js";
-import { serverCommand } from "./commands/server.js";
-import { userinfoCommand } from "./commands/userinfo.js";
-import { voteCommand } from "./commands/vote.js";
-import { colorSelect } from "./components/color.js";
-import { voteButtons } from "./components/vote.js";
-import { avatarMenu, quoteMenu } from "./context-menus/menus.js";
-import { requestLogger } from "./middleware/request-logger.js";
-import { feedbackModal } from "./modals/feedback.js";
-import { greetingsModule } from "./modules/greetings.js";
-import { auditPlugin } from "./plugins/audit.js";
 
 const token = process.env.DISCORD_TOKEN;
 if (token === undefined || token.length === 0) {
@@ -39,40 +36,50 @@ const deployMode =
 const logLevel =
   (process.env.LOG_LEVEL as FrameworkLogLevel | undefined) ?? "info";
 
+const metrics = createDispatchMetrics();
+const health = new HealthMonitor();
+
 const bot = new Bot({
   token,
   logger: createLogger({
     level: logLevel,
     pretty: process.env.NODE_ENV !== "production",
   }),
+  observer: metrics.observer,
 });
+bot.services.register("metrics", metrics);
+bot.services.register("health", health);
+bot.services.register("bot", bot);
+const scheduler = new JobScheduler({
+  logger: bot.logger.child({ subsystem: "jobs" }),
+  services: bot.services,
+});
+bot.services.register("scheduler", scheduler);
 
-bot.use(requestLogger);
-bot.command(pingCommand);
-bot.command(addCommand);
-bot.command(echoCommand);
-bot.command(userinfoCommand);
-bot.command(voteCommand);
-bot.command(colorCommand);
-bot.command(feedbackCommand);
-bot.command(searchCommand);
-bot.command(serverCommand);
-bot.command(boomCommand);
-bot.command(slowCommand);
-bot.component(voteButtons);
-bot.component(colorSelect);
-bot.modal(feedbackModal);
-bot.autocomplete(searchAutocomplete);
-bot.contextMenu(avatarMenu);
-bot.contextMenu(quoteMenu);
-await bot.plugin(auditPlugin);
-await bot.module(greetingsModule);
+const src = (dir: string): string =>
+  fileURLToPath(new URL(`./${dir}/`, import.meta.url));
+
+await loadMiddleware(bot, src("middleware"));
+await loadCommands(bot, src("commands"));
+await loadComponents(bot, src("components"));
+await loadModals(bot, src("modals"));
+await loadAutocomplete(bot, src("autocomplete"));
+await loadContextMenus(bot, src("context-menus"));
+await loadJobs(scheduler, bot.logger, src("jobs"));
+await loadPlugins(bot, src("plugins"));
+await bot.plugin(jobsPlugin(scheduler));
+await loadModules(bot, src("modules"));
 
 const connector = createDiscordConnector(bot, {
   intents: [GatewayIntentBits.Guilds],
   deploy: { mode: deployMode, guildId },
 });
 bot.attachConnector(connector);
+health.register("discord", discordClientCheck(connector.client));
+health.register(
+  "services",
+  () => bot.services.has("greeter") && bot.services.has("metrics"),
+);
 
 let shuttingDown = false;
 async function shutdown(signal: string): Promise<void> {

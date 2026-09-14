@@ -13,7 +13,7 @@ import {
   roleOption,
   stringOption,
   userOption,
-} from "@discord-framework/core";
+} from "@nexum/core";
 import { describe, expect, it } from "vitest";
 import {
   collectDeployBody,

@@ -1,4 +1,4 @@
-import { defineCommand, requireGuild } from "@discord-framework/core";
+import { defineCommand, requireGuild } from "@nexum/core";
 
 export const serverCommand = defineCommand({
   name: "server",
@@ -8,3 +8,5 @@ export const serverCommand = defineCommand({
     await ctx.reply(`Guild ID: ${ctx.guildId ?? "unknown"}`);
   },
 });
+
+export default serverCommand;

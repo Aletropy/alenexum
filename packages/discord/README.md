@@ -1,4 +1,4 @@
-# `@discord-framework/discord`
+# `@nexum/discord`
 
 Thin transport adapter over discord.js. Owns nothing but adaptation:
 

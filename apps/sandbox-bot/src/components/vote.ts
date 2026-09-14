@@ -1,4 +1,4 @@
-import { defineComponent } from "@discord-framework/core";
+import { defineComponent } from "@nexum/core";
 
 const counts = new Map<string, number>([
   ["yes", 0],
@@ -17,3 +17,5 @@ export const voteButtons = defineComponent({
     );
   },
 });
+
+export default voteButtons;

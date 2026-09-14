@@ -1,4 +1,4 @@
-import { defineContextMenu } from "@discord-framework/core";
+import { defineContextMenu } from "@nexum/core";
 
 export const avatarMenu = defineContextMenu({
   type: "user",
@@ -25,3 +25,5 @@ export const quoteMenu = defineContextMenu({
     await ctx.reply(`> ${content}`);
   },
 });
+
+export default [avatarMenu, quoteMenu];

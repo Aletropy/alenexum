@@ -17,6 +17,7 @@ export const FRAMEWORK_ERROR_CODES = [
   "FRAMEWORK_PLUGIN_INITIALIZATION_FAILED",
   "FRAMEWORK_LIFECYCLE_HOOK_FAILED",
   "FRAMEWORK_CONNECTOR_START_FAILED",
+  "FRAMEWORK_SHARD_OPERATION_FAILED",
   "FRAMEWORK_INTERACTION_ALREADY_ACKNOWLEDGED",
   "FRAMEWORK_SHUTDOWN_TIMEOUT",
   "FRAMEWORK_SERVICE_NOT_FOUND",
@@ -204,4 +205,79 @@ export function serializeError(error: unknown): {
     name: "UnknownError",
     message: typeof error === "string" ? error : "Unknown error value",
   };
+}
+
+/**
+ * Human-readable diagnostic report: code, category, message, known context,
+ * cause chain, and actionable next steps. For alerts, CLIs, and support —
+ * machines should consume `toJSON()`/`serializeError()` instead. Never
+ * includes secrets (context is framework metadata, never tokens).
+ */
+export function formatFrameworkError(error: unknown): string {
+  const lines: string[] = [];
+  if (isFrameworkError(error)) {
+    lines.push(`[${error.code}] (${error.category}) ${error.message}`);
+    const entries = Object.entries(error.context).filter(
+      ([, value]) => value !== undefined,
+    );
+    if (entries.length > 0) {
+      lines.push("Context:");
+      for (const [key, value] of entries) {
+        lines.push(`  ${key}: ${formatContextValue(value)}`);
+      }
+    }
+    appendCause(lines, error.cause, 0);
+    if (error.diagnostic !== undefined) {
+      lines.push(`Likely cause: ${error.diagnostic.likelyCause}`);
+      if (error.diagnostic.suggestedInvestigation.length > 0) {
+        lines.push("Suggested investigation:");
+        for (const [
+          index,
+          step,
+        ] of error.diagnostic.suggestedInvestigation.entries()) {
+          lines.push(`  ${index + 1}. ${step}`);
+        }
+      }
+    }
+    return lines.join("\n");
+  }
+  if (error instanceof Error) {
+    lines.push(`${error.name}: ${error.message}`);
+    appendCause(lines, error.cause, 0);
+    return lines.join("\n");
+  }
+  return `UnknownError: ${typeof error === "string" ? error : "Unknown error value"}`;
+}
+
+function formatContextValue(value: unknown): string {
+  if (
+    typeof value === "string" ||
+    typeof value === "number" ||
+    typeof value === "boolean"
+  ) {
+    return String(value);
+  }
+  if (value === null) {
+    return "null";
+  }
+  try {
+    return JSON.stringify(value) ?? "unserializable";
+  } catch {
+    return "unserializable";
+  }
+}
+
+function appendCause(lines: string[], cause: unknown, depth: number): void {
+  if (cause === undefined || cause === null || depth >= 3) {
+    return;
+  }
+  const indent = "  ".repeat(depth + 1);
+  if (cause instanceof Error) {
+    lines.push(`${indent}Caused by ${cause.name}: ${cause.message}`);
+    appendCause(lines, cause.cause, depth + 1);
+  } else if (typeof cause === "string") {
+    lines.push(`${indent}Caused by: ${cause}`);
+  } else {
+    lines.push(`${indent}Caused by an unknown value`);
+  }
 }

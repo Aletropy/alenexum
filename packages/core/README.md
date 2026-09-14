@@ -1,13 +1,13 @@
-# `@discord-framework/core`
+# `@nexum/core`
 
 Application architecture for Discord bots. No discord.js dependency — the
 transport is injected via the `Connector` interface (implemented by
-`@discord-framework/discord`).
+`@nexum/discord`).
 
 ## API
 
 ```ts
-import { Bot, defineCommand, createLogger } from "@discord-framework/core";
+import { Bot, defineCommand, createLogger } from "@nexum/core";
 
 const bot = new Bot({ token: process.env.DISCORD_TOKEN! });
 
@@ -38,7 +38,7 @@ Options are declared with builders and flow into the handler type — required
 vs optional, choice literals, and entity shapes are all inferred:
 
 ```ts
-import { defineCommand, integerOption, stringOption, userOption } from "@discord-framework/core";
+import { defineCommand, integerOption, stringOption, userOption } from "@nexum/core";
 
 const ban = defineCommand({
   name: "ban",
@@ -133,7 +133,7 @@ import {
   defineGuard,
   requireGuild,
   requireUserPermissions,
-} from "@discord-framework/core";
+} from "@nexum/core";
 import { PermissionFlagsBits } from "discord.js";
 
 bot.guard(defineGuard({ name: "audit", check: (ctx) => true })); // global
@@ -162,7 +162,7 @@ All permission checks are fail-closed.
 ## Plugins, modules, services
 
 ```ts
-import { defineModule, definePlugin } from "@discord-framework/core";
+import { defineModule, definePlugin } from "@nexum/core";
 
 await bot.plugin(
   definePlugin({
@@ -196,6 +196,55 @@ logger (`plugin`/`module` bindings). Use `defaultMemberPermissions` on a
 command for Discord client-side gating; runtime enforcement stays in
 guards.
 
+## Bulk loading
+
+When one import + one call per file gets old, load whole directories at
+bootstrap instead. This is explicit bulk registration, not magic discovery:
+the call site names the directory and the kind, files load in sorted
+order, every module is validated by the same registries as manual calls,
+and every outcome is logged.
+
+```ts
+import { loadCommands, loadComponents } from "@nexum/core";
+import { fileURLToPath } from "node:url";
+
+const src = (dir: string): string =>
+  fileURLToPath(new URL(`./${dir}/`, import.meta.url));
+
+await loadCommands(bot, src("commands"));
+await loadComponents(bot, src("components"));
+```
+
+Conventions per file: the default export holds one definition or an array
+of them (`loadCommands`, `loadComponents`, `loadModals`,
+`loadAutocomplete`, `loadContextMenus`, `loadMiddleware`, `loadGuards`,
+`loadPlugins`, `loadModules`; `loadJobs` lives in `@nexum/jobs`).
+Options: `recursive`, `pattern`, `extensions`. The first invalid file
+aborts the boot with file context — same fail-fast philosophy as manual
+registration. Directory scanning happens only here, never on the hot path.
+Note: single-file bundles have no directories to scan; keep unbundled
+output (or a manifest) for production.
+
+## Observability
+
+Opt-in via `BotOptions` — absent hooks cost a single `undefined` check:
+
+```ts
+import type { TracerLike } from "@nexum/core";
+import { trace } from "@opentelemetry/api"; // your SDK, your version
+
+const bot = new Bot({
+  token,
+  observer: metricsObserver, // per-dispatch { route, kind, outcome, durationMs, errorCode?, guard? }
+  tracer: trace.getTracer("bot") as unknown as TracerLike, // one span per dispatch
+});
+```
+
+`bot.getActiveDispatchCount()` exposes in-flight work for health checks;
+`bot.stop()` drains it within `shutdownTimeoutMs` before tearing down the
+connector. See `@nexum/telemetry` for metrics, health checks,
+and Prometheus exposition.
+
 ## Notes
 
 - Registration validates eagerly (`bot.command` throws on duplicates/bad
@@ -205,5 +254,7 @@ guards.
   returned as `{ ok: false, error }`.
 - Errors are `FrameworkError`s with stable `FRAMEWORK_*` codes, categories,
   and probabilistic diagnostics (`likelyCause` + `suggestedInvestigation`).
+  `formatFrameworkError(error)` renders a human-readable report for alerts
+  and CLIs; machines should use `error.toJSON()` / `serializeError()`.
 - Tokens and auth headers are redacted from logs.
 - `ctx.interaction` / `ctx.client` are escape hatches to raw discord.js objects.

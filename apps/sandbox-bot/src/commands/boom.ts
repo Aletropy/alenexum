@@ -1,4 +1,4 @@
-import { defineCommand } from "@discord-framework/core";
+import { defineCommand } from "@nexum/core";
 
 /**
  * Intentional failure injection: exercises the framework error boundary,
@@ -25,3 +25,5 @@ export const slowCommand = defineCommand({
     await ctx.followUp("Finally done (slow command).");
   },
 });
+
+export default [boomCommand, slowCommand];

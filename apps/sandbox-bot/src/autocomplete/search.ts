@@ -1,4 +1,4 @@
-import { defineAutocomplete } from "@discord-framework/core";
+import { defineAutocomplete } from "@nexum/core";
 
 const FRUITS = ["apple", "apricot", "avocado", "banana", "blueberry", "cherry"];
 
@@ -14,3 +14,5 @@ export const searchAutocomplete = defineAutocomplete({
     await ctx.respond(matches.map((fruit) => ({ name: fruit, value: fruit })));
   },
 });
+
+export default searchAutocomplete;

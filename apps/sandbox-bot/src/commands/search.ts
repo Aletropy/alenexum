@@ -1,4 +1,4 @@
-import { defineCommand, stringOption } from "@discord-framework/core";
+import { defineCommand, stringOption } from "@nexum/core";
 
 export const searchCommand = defineCommand({
   name: "search",
@@ -14,3 +14,5 @@ export const searchCommand = defineCommand({
     await ctx.reply(`You searched for: ${ctx.options.query}`);
   },
 });
+
+export default searchCommand;

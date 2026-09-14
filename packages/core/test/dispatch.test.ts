@@ -1,24 +1,11 @@
-import { Writable } from "node:stream";
+import { createFakeInteraction, LogCapture } from "@nexum/testing";
 import { describe, expect, it } from "vitest";
 import { Bot } from "../src/bot.js";
 import { defineCommand, integerOption, stringOption } from "../src/index.js";
 import { createLogger } from "../src/logger.js";
-import { createFakeInteraction } from "./helpers.js";
-
-class MemoryStream extends Writable {
-  lines: string[] = [];
-  override _write(
-    chunk: unknown,
-    _encoding: BufferEncoding,
-    callback: (error?: Error | null) => void,
-  ): void {
-    this.lines.push(String(chunk));
-    callback();
-  }
-}
 
 function testBot() {
-  const dest = new MemoryStream();
+  const dest = new LogCapture();
   const bot = new Bot({
     token: "test-token",
     logger: createLogger({ level: "debug", destination: dest }),
@@ -26,8 +13,8 @@ function testBot() {
   return { bot, dest };
 }
 
-function logLines(dest: MemoryStream): Record<string, unknown>[] {
-  return dest.lines.map((line) => JSON.parse(line) as Record<string, unknown>);
+function logLines(dest: LogCapture): Record<string, unknown>[] {
+  return dest.lines();
 }
 
 describe("Bot.handleInteraction", () => {

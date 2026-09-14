@@ -1,3 +1,4 @@
+import { FakeOptionResolver } from "@nexum/testing";
 import { describe, expect, it } from "vitest";
 import { FrameworkError } from "../src/errors.js";
 import {
@@ -12,7 +13,6 @@ import {
   stringOption,
   userOption,
 } from "../src/options.js";
-import { FakeOptionResolver } from "./helpers.js";
 
 const CTX = { command: "test", requestId: "r1" };
 

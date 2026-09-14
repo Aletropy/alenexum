@@ -1,4 +1,4 @@
-import { defineGuard, definePlugin } from "@discord-framework/core";
+import { defineGuard, definePlugin } from "@nexum/core";
 
 /** Cross-cutting plugin: observes every dispatch without owning features. */
 export const auditPlugin = definePlugin({
@@ -22,3 +22,5 @@ export const auditPlugin = definePlugin({
     );
   },
 });
+
+export default auditPlugin;

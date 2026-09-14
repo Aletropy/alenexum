@@ -1,4 +1,4 @@
-import { defineComponent } from "@discord-framework/core";
+import { defineComponent } from "@nexum/core";
 
 export const colorSelect = defineComponent({
   customId: "color-pick",
@@ -7,3 +7,5 @@ export const colorSelect = defineComponent({
     await ctx.reply(`You picked: ${ctx.values.join(", ") || "(nothing)"}`);
   },
 });
+
+export default colorSelect;

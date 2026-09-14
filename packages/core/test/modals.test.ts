@@ -1,9 +1,9 @@
+import { createFakeInteraction } from "@nexum/testing";
 import { describe, expect, it } from "vitest";
 import { Bot } from "../src/bot.js";
 import { createLogger } from "../src/logger.js";
 import { createModalContext, defineModal } from "../src/modals.js";
 import { ServiceContainer } from "../src/services.js";
-import { createFakeInteraction } from "./helpers.js";
 
 function testBot() {
   return new Bot({

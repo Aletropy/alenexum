@@ -1,4 +1,4 @@
-import { defineModal } from "@discord-framework/core";
+import { defineModal } from "@nexum/core";
 
 export const feedbackModal = defineModal({
   customId: "feedback",
@@ -8,3 +8,5 @@ export const feedbackModal = defineModal({
     );
   },
 });
+
+export default feedbackModal;

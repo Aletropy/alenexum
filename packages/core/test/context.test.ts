@@ -1,3 +1,4 @@
+import { createFakeInteraction } from "@nexum/testing";
 import { describe, expect, it } from "vitest";
 import {
   createCommandContext,
@@ -6,7 +7,6 @@ import {
 import { FrameworkError } from "../src/errors.js";
 import { createLogger } from "../src/logger.js";
 import { ServiceContainer } from "../src/services.js";
-import { createFakeInteraction } from "./helpers.js";
 
 function setup(interaction: unknown) {
   return createCommandContext({

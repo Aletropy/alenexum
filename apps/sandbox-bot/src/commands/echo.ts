@@ -3,7 +3,7 @@ import {
   cooldown,
   defineCommand,
   stringOption,
-} from "@discord-framework/core";
+} from "@nexum/core";
 
 export const echoCommand = defineCommand({
   name: "echo",
@@ -26,3 +26,5 @@ export const echoCommand = defineCommand({
     await ctx.reply(text);
   },
 });
+
+export default echoCommand;

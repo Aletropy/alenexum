@@ -1,4 +1,4 @@
-import { defineCommand } from "@discord-framework/core";
+import { defineCommand } from "@nexum/core";
 import {
   ActionRowBuilder,
   type ChatInputCommandInteraction,
@@ -24,3 +24,5 @@ export const colorCommand = defineCommand({
     await interaction.reply({ content: "Pick one:", components: [row] });
   },
 });
+
+export default colorCommand;

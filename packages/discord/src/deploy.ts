@@ -4,7 +4,7 @@ import {
   type CommandDefinition,
   type ContextMenuDefinition,
   FrameworkError,
-} from "@discord-framework/core";
+} from "@nexum/core";
 import {
   ApplicationCommandType,
   ContextMenuCommandBuilder,

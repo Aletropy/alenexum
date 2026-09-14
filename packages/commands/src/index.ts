@@ -1,2 +1,2 @@
-// @discord-framework/commands — reserved for a later phase. Intentionally empty.
+// @nexum/commands — reserved for a later phase. Intentionally empty.
 export {};

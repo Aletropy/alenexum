@@ -90,7 +90,7 @@ export function createLogger(
   const {
     level = "info",
     pretty = false,
-    name = "discord-framework",
+    name = "nexum",
   } = options;
   const baseOptions = {
     level,

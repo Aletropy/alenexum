@@ -1,5 +1,5 @@
 {
-  "name": "@discord-framework/discord",
+  "name": "@nexum/discord",
   "version": "0.1.0",
   "type": "module",
   "main": "./dist/index.js",
@@ -21,11 +21,11 @@
     "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
-    "@discord-framework/core": "workspace:*",
+    "@nexum/core": "workspace:*",
     "discord.js": "^14.18.0"
   },
   "devDependencies": {
-    "@discord-framework/typescript-config": "workspace:*",
+    "@nexum/typescript-config": "workspace:*",
     "@types/node": "^22.10.0",
     "tsup": "^8.5.0",
     "typescript": "~5.9.3",

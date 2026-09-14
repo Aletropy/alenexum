@@ -1,4 +1,4 @@
-import { Writable } from "node:stream";
+import { createFakeInteraction, LogCapture } from "@nexum/testing";
 import { describe, expect, it } from "vitest";
 import { Bot } from "../src/bot.js";
 import {
@@ -8,19 +8,6 @@ import {
   runGuards,
 } from "../src/guards.js";
 import { createLogger } from "../src/logger.js";
-import { createFakeInteraction } from "./helpers.js";
-
-class MemoryStream extends Writable {
-  lines: string[] = [];
-  override _write(
-    chunk: unknown,
-    _encoding: BufferEncoding,
-    callback: (error?: Error | null) => void,
-  ): void {
-    this.lines.push(String(chunk));
-    callback();
-  }
-}
 
 function stubCtx(overrides: Record<string, unknown> = {}) {
   return {
@@ -143,7 +130,7 @@ describe("runGuards", () => {
 
 describe("guard dispatch", () => {
   function guardedBot() {
-    const dest = new MemoryStream();
+    const dest = new LogCapture();
     const bot = new Bot({
       token: "test-token",
       logger: createLogger({ level: "debug", destination: dest }),
@@ -173,9 +160,7 @@ describe("guard dispatch", () => {
     expect(result).toMatchObject({ ok: true, command: "ping" });
     expect(ran).toBe(false);
     expect(interaction.replies).toEqual(["closed beta"]);
-    const denied = dest.lines
-      .map((line) => JSON.parse(line) as Record<string, unknown>)
-      .find((line) => line.event === "command.denied");
+    const denied = dest.events("command.denied")[0];
     expect(denied?.guard).toBe("closed");
     expect(denied?.command).toBe("ping");
   });
