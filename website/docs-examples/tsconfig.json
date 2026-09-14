@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "baseUrl": ".",
+    "paths": {
+      "@nexum/core": ["../../packages/core/src/index.ts"],
+      "@nexum/discord": ["../../packages/discord/src/index.ts"],
+      "@nexum/testing": ["../../packages/testing/src/index.ts"],
+      "@nexum/telemetry": ["../../packages/telemetry/src/index.ts"],
+      "@nexum/jobs": ["../../packages/jobs/src/index.ts"],
+      "@nexum/sharding": ["../../packages/sharding/src/index.ts"]
+    }
+  },
+  "include": ["./**/*.mts"]
+}

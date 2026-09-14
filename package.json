@@ -16,7 +16,10 @@
     "format": "biome format --write .",
     "typecheck": "turbo run typecheck",
     "bench": "turbo run bench",
-    "ci": "pnpm lint && pnpm typecheck && pnpm test && pnpm build",
+    "ci": "pnpm lint && pnpm typecheck && pnpm test && pnpm docs:check && pnpm build",
+    "docs:check": "pnpm --filter website check",
+    "docs:build": "pnpm --filter website build",
+    "docs:start": "pnpm --filter website start",
     "dev:sandbox": "pnpm --filter sandbox-bot dev"
   },
   "devDependencies": {

@@ -6,3 +6,5 @@ dist/
 .env.local
 coverage/
 .vitest-cache/
+website/build/
+website/.docusaurus/

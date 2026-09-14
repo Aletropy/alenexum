@@ -2,5 +2,11 @@ packages:
   - "packages/*"
   - "apps/*"
   - "tooling/*"
+  - "website"
 allowBuilds:
+  core-js: true
+  core-js-pure: true
   esbuild: true
+
+overrides:
+  webpack: 5.110.3

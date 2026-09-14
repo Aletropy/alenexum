@@ -1,0 +1,17 @@
+{
+  "extends": ["//"],
+  "tasks": {
+    "build": {
+      "inputs": [
+        "../docs/**/*.md",
+        "docusaurus.config.ts",
+        "sidebars.ts",
+        "src/**/*",
+        "static/**/*",
+        "scripts/**/*",
+        "package.json"
+      ],
+      "outputs": ["build/**"]
+    }
+  }
+}
