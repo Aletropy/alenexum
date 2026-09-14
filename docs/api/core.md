@@ -1,18 +1,18 @@
 ---
-title: "API: @nexum/core"
+title: "API: @alenexum/core"
 description: Complete public reference for the core package — Bot, commands, contexts, middleware, guards, registries, services, config, logging, errors, loaders.
 ---
 
-# API: `@nexum/core`
+# API: `@alenexum/core`
 
-Import from `@nexum/core`. Public API is a contract — additive changes only (see [Versioning](../migration/versioning.md)). Internal helpers (`replies.ts` internals, `context.asRecord`) are not re-exported and not documented here.
+Import from `@alenexum/core`. Public API is a contract — additive changes only (see [Versioning](../migration/versioning.md)). Internal helpers (`replies.ts` internals, `context.asRecord`) are not re-exported and not documented here.
 
 ## Bot
 
 **Purpose:** Application root — lifecycle, registries, dispatch. Implements `PluginHost`.
 
 ```ts
-import { Bot } from "@nexum/core";
+import { Bot } from "@alenexum/core";
 const bot = new Bot({ token });
 ```
 

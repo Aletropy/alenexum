@@ -1,2 +1,2 @@
-// @nexum/plugins — reserved for a later phase. Intentionally empty.
+// @alenexum/plugins — reserved for a later phase. Intentionally empty.
 export {};

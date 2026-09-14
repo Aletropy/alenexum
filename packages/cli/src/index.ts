@@ -1,2 +1,2 @@
-// @nexum/cli — reserved for a later phase. Intentionally empty.
+// @alenexum/cli — reserved for a later phase. Intentionally empty.
 export {};

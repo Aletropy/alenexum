@@ -1,4 +1,4 @@
-import { FrameworkError } from "@nexum/core";
+import { FrameworkError } from "@alenexum/core";
 
 /**
  * Health monitoring: named checks with timeouts, aggregated into a

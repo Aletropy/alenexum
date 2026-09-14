@@ -1,4 +1,4 @@
-import { defineCommand } from "@nexum/core";
+import { defineCommand } from "@alenexum/core";
 
 /** Concurrency seed: one defer plus five parallel follow-ups. */
 export const floodCommand = defineCommand({

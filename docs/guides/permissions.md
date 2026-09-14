@@ -8,7 +8,7 @@ description: Gate commands with fail-closed guard factories.
 Permissions are guards (`fundamentals/middleware-guards.md`): allow/deny decisions with user-facing messages, evaluated before middleware. All factories are **fail-closed** — unreadable shapes deny, never allow.
 
 ```ts
-import { requireGuild, requireUserPermissions, requireRoles } from "@nexum/core";
+import { requireGuild, requireUserPermissions, requireRoles } from "@alenexum/core";
 import { PermissionFlagsBits } from "discord.js";
 
 bot.command({

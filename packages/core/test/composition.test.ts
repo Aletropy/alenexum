@@ -1,4 +1,4 @@
-import { createFakeInteraction, LogCapture } from "@nexum/testing";
+import { createFakeInteraction, LogCapture } from "@alenexum/testing";
 import { describe, expect, it } from "vitest";
 import { Bot } from "../src/bot.js";
 import { FrameworkError } from "../src/errors.js";

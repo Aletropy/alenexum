@@ -1,4 +1,4 @@
-import { createFakeInteraction } from "@nexum/testing";
+import { createFakeInteraction } from "@alenexum/testing";
 import { describe, expect, it } from "vitest";
 import {
   createCommandContext,

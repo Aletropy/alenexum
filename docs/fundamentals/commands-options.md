@@ -8,7 +8,7 @@ description: defineCommand, slash-name rules, the nine option types, type infere
 ## Defining a command
 
 ```ts
-import { defineCommand, integerOption } from "@nexum/core";
+import { defineCommand, integerOption } from "@alenexum/core";
 
 export default defineCommand({
   name: "add",
@@ -52,6 +52,6 @@ Discord validates at the edge, but the framework re-validates at dispatch via `p
 
 ## Deployment mapping
 
-`@nexum/discord` converts definitions to `SlashCommandBuilder` JSON (`toSlashCommandJSON`): all nine option types, `choices` count validation, `choices` + `autocomplete` mutual exclusion, and `defaultMemberPermissions` decimal-string validation. See [Deploy commands](../guides/deploy-commands.md).
+`@alenexum/discord` converts definitions to `SlashCommandBuilder` JSON (`toSlashCommandJSON`): all nine option types, `choices` count validation, `choices` + `autocomplete` mutual exclusion, and `defaultMemberPermissions` decimal-string validation. See [Deploy commands](../guides/deploy-commands.md).
 
 Related: [Interactions](./interactions.md) · [API: core](../api/core.md).

@@ -1,5 +1,5 @@
 /**
- * `@nexum/testing` — fakes and integration harness for testing
+ * `@alenexum/testing` — fakes and integration harness for testing
  * bots built on the framework. No network, no tokens, deterministic.
  *
  * Test pyramid: fast unit + type tests (vitest, colocated), integration

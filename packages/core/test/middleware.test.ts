@@ -1,4 +1,4 @@
-import { createFakeInteraction } from "@nexum/testing";
+import { createFakeInteraction } from "@alenexum/testing";
 import { describe, expect, it, vi } from "vitest";
 import { createCommandContext } from "../src/context.js";
 import { createLogger } from "../src/logger.js";

@@ -1,4 +1,4 @@
-import { defineCommand, requireGuild } from "@nexum/core";
+import { defineCommand, requireGuild } from "@alenexum/core";
 
 export const serverCommand = defineCommand({
   name: "server",

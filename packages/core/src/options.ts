@@ -4,7 +4,7 @@ import { FrameworkError } from "./errors.js";
  * Command option schema, parsing, and type inference.
  *
  * Core owns a discord.js-agnostic *data* schema (plain interfaces) plus
- * runtime parsing from a structural resolver. `@nexum/discord`
+ * runtime parsing from a structural resolver. `@alenexum/discord`
  * converts the same schema to discord.js builders for REST deployment.
  * discord.js is never imported here.
  */

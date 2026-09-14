@@ -1,5 +1,5 @@
-import { defineCommand } from "@nexum/core";
-import type { JobScheduler } from "@nexum/jobs";
+import { defineCommand } from "@alenexum/core";
+import type { JobScheduler } from "@alenexum/jobs";
 
 export const jobsCommand = defineCommand({
   name: "jobs",

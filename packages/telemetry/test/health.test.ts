@@ -1,4 +1,4 @@
-import { FrameworkError } from "@nexum/core";
+import { FrameworkError } from "@alenexum/core";
 import { describe, expect, it } from "vitest";
 import { discordClientCheck, HealthMonitor } from "../src/health.js";
 

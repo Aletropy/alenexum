@@ -5,7 +5,7 @@
  * changes; they do not gate CI.
  */
 
-import { FakeOptionResolver } from "@nexum/testing";
+import { FakeOptionResolver } from "@alenexum/testing";
 import { bench, describe } from "vitest";
 import { createCommandContext } from "../src/context.js";
 import {

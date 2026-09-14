@@ -1,6 +1,6 @@
-import type { Bot } from "@nexum/core";
-import { defineCommand } from "@nexum/core";
-import type { HealthMonitor } from "@nexum/telemetry";
+import type { Bot } from "@alenexum/core";
+import { defineCommand } from "@alenexum/core";
+import type { HealthMonitor } from "@alenexum/telemetry";
 
 export const healthCommand = defineCommand({
   name: "health",

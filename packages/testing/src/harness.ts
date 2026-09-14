@@ -13,8 +13,8 @@ import {
 /**
  * Integration harness: dispatch helpers plus structured-log capture.
  * Intentionally dependency-free — it drives the minimal `TestBotLike`
- * surface structurally, so `@nexum/testing` never depends on
- * `@nexum/core` (no workspace cycle). Core contract-tests the
+ * surface structurally, so `@alenexum/testing` never depends on
+ * `@alenexum/core` (no workspace cycle). Core contract-tests the
  * compatibility (`Bot` satisfies `TestBotLike`).
  */
 export interface TestDispatchResult {

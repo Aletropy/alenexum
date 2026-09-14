@@ -5,12 +5,12 @@ description: Bot construction, lifecycle states, hooks, connectors, and graceful
 
 # Application and lifecycle
 
-`Bot` (in `@nexum/core`) is the application root. It owns lifecycle, registries, middleware, dispatch, services, and logging — never the network. Network transport is injected through the `Connector` seam.
+`Bot` (in `@alenexum/core`) is the application root. It owns lifecycle, registries, middleware, dispatch, services, and logging — never the network. Network transport is injected through the `Connector` seam.
 
 ## Construction
 
 ```ts
-import { Bot } from "@nexum/core";
+import { Bot } from "@alenexum/core";
 
 const bot = new Bot({
   token: process.env.DISCORD_TOKEN!,
@@ -61,7 +61,7 @@ await bot.start();              // runs beforeStart → connector.start() → af
 await bot.stop();               // runs beforeStop → connector.stop() → afterStop
 ```
 
-`Connector` is `{ name, start(), stop() }`. `@nexum/discord`'s connector logs in (`client.login`), routes `interactionCreate → bot.handleInteraction`, and destroys the client on stop. Attaching a second connector throws `FRAMEWORK_INVALID_CONFIGURATION`; a connector start failure surfaces as `FRAMEWORK_CONNECTOR_START_FAILED`.
+`Connector` is `{ name, start(), stop() }`. `@alenexum/discord`'s connector logs in (`client.login`), routes `interactionCreate → bot.handleInteraction`, and destroys the client on stop. Attaching a second connector throws `FRAMEWORK_INVALID_CONFIGURATION`; a connector start failure surfaces as `FRAMEWORK_CONNECTOR_START_FAILED`.
 
 ## Graceful shutdown
 

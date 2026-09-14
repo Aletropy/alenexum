@@ -1,2 +1,2 @@
-// @nexum/commands — reserved for a later phase. Intentionally empty.
+// @alenexum/commands — reserved for a later phase. Intentionally empty.
 export {};

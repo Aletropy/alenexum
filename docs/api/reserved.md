@@ -9,12 +9,12 @@ The following packages exist as **empty placeholders** (`private: true`, single 
 
 | Package | Status | Use instead |
 |---|---|---|
-| `@nexum/commands` | Reserved stub | `@nexum/core` (`defineCommand`, `CommandRegistry`) |
-| `@nexum/events` | Reserved stub | discord.js client events via `ctx.client` escape hatch |
-| `@nexum/middleware` | Reserved stub | `@nexum/core` (`compose`, `Middleware`) |
-| `@nexum/components` | Reserved stub | `@nexum/core` (`defineComponent`, `CustomIdRegistry`) |
-| `@nexum/plugins` | Reserved stub | `@nexum/core` (`definePlugin`) |
-| `@nexum/cli` | Reserved stub | No CLI exists; use `load*` + `deployCommands` in app code |
-| `@nexum/all` | Reserved stub | Import per-package directly |
+| `@alenexum/commands` | Reserved stub | `@alenexum/core` (`defineCommand`, `CommandRegistry`) |
+| `@alenexum/events` | Reserved stub | discord.js client events via `ctx.client` escape hatch |
+| `@alenexum/middleware` | Reserved stub | `@alenexum/core` (`compose`, `Middleware`) |
+| `@alenexum/components` | Reserved stub | `@alenexum/core` (`defineComponent`, `CustomIdRegistry`) |
+| `@alenexum/plugins` | Reserved stub | `@alenexum/core` (`definePlugin`) |
+| `@alenexum/cli` | Reserved stub | No CLI exists; use `load*` + `deployCommands` in app code |
+| `@alenexum/all` | Reserved stub | Import per-package directly |
 
 If a stub gains a real implementation, this page shrinks and a dedicated API page appears with migration notes — never silently.

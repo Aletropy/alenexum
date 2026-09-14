@@ -11,15 +11,15 @@
     "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
-    "@nexum/core": "workspace:*",
-    "@nexum/discord": "workspace:*",
-    "@nexum/jobs": "workspace:*",
-    "@nexum/telemetry": "workspace:*",
+    "@alenexum/core": "workspace:*",
+    "@alenexum/discord": "workspace:*",
+    "@alenexum/jobs": "workspace:*",
+    "@alenexum/telemetry": "workspace:*",
     "discord.js": "^14.18.0",
     "dotenv": "^16.4.5"
   },
   "devDependencies": {
-    "@nexum/typescript-config": "workspace:*",
+    "@alenexum/typescript-config": "workspace:*",
     "@types/node": "^22.10.0",
     "tsup": "^8.5.0",
     "tsx": "^4.19.0",

@@ -1,5 +1,5 @@
 import { fileURLToPath } from "node:url";
-import { createLogger } from "@nexum/core";
+import { createLogger } from "@alenexum/core";
 import { describe, expect, it } from "vitest";
 import { JobScheduler } from "../src/jobs.js";
 import { loadJobs } from "../src/loader.js";

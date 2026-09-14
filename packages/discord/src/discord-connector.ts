@@ -2,7 +2,7 @@ import {
   type Bot,
   type Connector,
   FrameworkError,
-} from "@nexum/core";
+} from "@alenexum/core";
 import { Client, type ClientOptions, Events, REST, Routes } from "discord.js";
 import { collectDeployBody } from "./deploy.js";
 

@@ -1,4 +1,4 @@
-import { defineAutocomplete } from "@nexum/core";
+import { defineAutocomplete } from "@alenexum/core";
 
 const FRUITS = ["apple", "apricot", "avocado", "banana", "blueberry", "cherry"];
 

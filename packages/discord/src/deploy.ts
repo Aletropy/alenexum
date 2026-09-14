@@ -4,7 +4,7 @@ import {
   type CommandDefinition,
   type ContextMenuDefinition,
   FrameworkError,
-} from "@nexum/core";
+} from "@alenexum/core";
 import {
   ApplicationCommandType,
   ContextMenuCommandBuilder,

@@ -1,4 +1,4 @@
-import { defineJob } from "@nexum/jobs";
+import { defineJob } from "@alenexum/jobs";
 
 /** Liveness heartbeat: proves the scheduler runs inside bot lifecycle. */
 export const heartbeatJob = defineJob({

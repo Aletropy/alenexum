@@ -1,5 +1,5 @@
-import { defineCommand } from "@nexum/core";
-import type { DispatchMetrics } from "@nexum/telemetry";
+import { defineCommand } from "@alenexum/core";
+import type { DispatchMetrics } from "@alenexum/telemetry";
 
 export const statsCommand = defineCommand({
   name: "stats",

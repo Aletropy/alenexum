@@ -1,4 +1,4 @@
-import { defineGuard, definePlugin } from "@nexum/core";
+import { defineGuard, definePlugin } from "@alenexum/core";
 
 /** Cross-cutting plugin: observes every dispatch without owning features. */
 export const auditPlugin = definePlugin({

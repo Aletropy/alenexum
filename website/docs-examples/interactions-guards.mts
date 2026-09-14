@@ -15,7 +15,7 @@ import {
   type Middleware,
   requireGuild,
   requireUserPermissions,
-} from "@nexum/core";
+} from "@alenexum/core";
 import { PermissionFlagsBits } from "discord.js";
 
 export const requestLogger: Middleware = async (ctx, next) => {

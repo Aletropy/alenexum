@@ -1,4 +1,4 @@
-import { defineCommand, userOption } from "@nexum/core";
+import { defineCommand, userOption } from "@alenexum/core";
 
 export const userinfoCommand = defineCommand({
   name: "userinfo",

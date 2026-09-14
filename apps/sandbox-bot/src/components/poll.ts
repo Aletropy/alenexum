@@ -1,4 +1,4 @@
-import { defineComponent } from "@nexum/core";
+import { defineComponent } from "@alenexum/core";
 
 /**
  * Quiet ack for poll buttons: the discord.js collector announces the result,

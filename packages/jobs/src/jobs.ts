@@ -5,7 +5,7 @@ import {
   type Plugin,
   ServiceContainer,
   serializeError,
-} from "@nexum/core";
+} from "@alenexum/core";
 
 /**
  * Background jobs: fixed-rate scheduled units with timeouts, overlap

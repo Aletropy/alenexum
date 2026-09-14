@@ -1,11 +1,11 @@
 ---
-title: "API: @nexum/jobs"
+title: "API: @alenexum/jobs"
 description: Background job scheduler, lifecycle plugin, and bulk loader reference.
 ---
 
-# API: `@nexum/jobs`
+# API: `@alenexum/jobs`
 
-Depends on `@nexum/core`. Import from `@nexum/jobs`.
+Depends on `@alenexum/core`. Import from `@alenexum/jobs`.
 
 | Export | Kind | Notes |
 |---|---|---|

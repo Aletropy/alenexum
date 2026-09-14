@@ -13,7 +13,7 @@ import {
   roleOption,
   stringOption,
   userOption,
-} from "@nexum/core";
+} from "@alenexum/core";
 import { describe, expect, it } from "vitest";
 import {
   collectDeployBody,

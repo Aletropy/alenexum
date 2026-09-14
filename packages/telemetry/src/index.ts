@@ -1,5 +1,5 @@
 /**
- * `@nexum/telemetry` — opt-in production observability.
+ * `@alenexum/telemetry` — opt-in production observability.
  *
  * Metrics, health checks, and tracing conventions. Zero dependencies, no
  * ports owned, no SDKs vendored: the framework emits observations and spans

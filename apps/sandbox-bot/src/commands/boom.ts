@@ -1,4 +1,4 @@
-import { defineCommand } from "@nexum/core";
+import { defineCommand } from "@alenexum/core";
 
 /**
  * Intentional failure injection: exercises the framework error boundary,

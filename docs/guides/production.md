@@ -1,6 +1,6 @@
 ---
 title: Production
-description: Operate a single-process Nexum bot — secrets, deploy modes, shutdown, observability minimums.
+description: Operate a single-process Alenexum bot — secrets, deploy modes, shutdown, observability minimums.
 ---
 
 # Production

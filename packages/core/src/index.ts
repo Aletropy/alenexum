@@ -1,5 +1,5 @@
 /**
- * `@nexum/core` — application architecture for Discord bots.
+ * `@alenexum/core` — application architecture for Discord bots.
  *
  * discord.js owns the network (Gateway, REST, caches, builders). This package
  * owns lifecycle, routing, middleware, registries, config, logging, and

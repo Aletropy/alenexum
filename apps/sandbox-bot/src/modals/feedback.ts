@@ -1,4 +1,4 @@
-import { defineModal } from "@nexum/core";
+import { defineModal } from "@alenexum/core";
 
 export const feedbackModal = defineModal({
   customId: "feedback",

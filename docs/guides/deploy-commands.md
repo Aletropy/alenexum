@@ -9,7 +9,7 @@ Registration (`bot.command(...)`) is local. **Deployment** pushes definitions to
 
 ## How it works
 
-`@nexum/discord` converts definitions to Discord JSON:
+`@alenexum/discord` converts definitions to Discord JSON:
 
 - `toSlashCommandJSON(def)` — via `SlashCommandBuilder`, all nine option types, `choices` (1–25) validation, `choices` + `autocomplete` mutual exclusion, `defaultMemberPermissions` decimal-string validation. Violations throw `FRAMEWORK_INVALID_CONFIGURATION` at deploy time, not at runtime.
 - `toContextMenuJSON(def)` — via `ContextMenuCommandBuilder` (type 2 = user, 3 = message).

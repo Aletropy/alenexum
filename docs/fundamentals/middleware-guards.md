@@ -15,7 +15,7 @@ Execution order per dispatch: **global guards → per-definition guards → glob
 ## Middleware
 
 ```ts
-import type { Middleware } from "@nexum/core";
+import type { Middleware } from "@alenexum/core";
 
 export default (async (ctx, next) => {
   const start = Date.now();
@@ -37,7 +37,7 @@ export default (async (ctx, next) => {
 ## Guards
 
 ```ts
-import { defineGuard } from "@nexum/core";
+import { defineGuard } from "@alenexum/core";
 
 export const audit = defineGuard({
   name: "audit",
@@ -56,7 +56,7 @@ bot.guard(audit);
 `permissions.ts` provides fail-closed guard factories (unreadable shapes deny, never allow):
 
 ```ts
-import { requireGuild, requireUserPermissions, requireRoles } from "@nexum/core";
+import { requireGuild, requireUserPermissions, requireRoles } from "@alenexum/core";
 import { PermissionFlagsBits } from "discord.js";
 
 bot.command({
@@ -89,7 +89,7 @@ All accept `{ message }` to override the denial text.
 Cooldown is a guard, not middleware:
 
 ```ts
-import { cooldown } from "@nexum/core";
+import { cooldown } from "@alenexum/core";
 
 bot.command({
   name: "echo",

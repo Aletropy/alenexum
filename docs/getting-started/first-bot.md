@@ -1,6 +1,6 @@
 ---
 title: Build your first bot
-description: Tutorial — install, register a ping command, and start a Nexum bot.
+description: Tutorial — install, register a ping command, and start a Alenexum bot.
 ---
 
 # Build your first bot
@@ -9,7 +9,7 @@ This tutorial takes you from zero to a working bot that answers `/ping` with `Po
 
 ## 1. Configure the token
 
-Nexum reads no config files for secrets. Pass the token from the environment:
+Alenexum reads no config files for secrets. Pass the token from the environment:
 
 ```bash
 export DISCORD_TOKEN="your-token-here"
@@ -20,7 +20,7 @@ export DISCORD_TOKEN="your-token-here"
 ## 2. Write the bot
 
 ```ts
-import { Bot } from "@nexum/core";
+import { Bot } from "@alenexum/core";
 
 const bot = new Bot({ token: process.env.DISCORD_TOKEN! });
 
@@ -46,8 +46,8 @@ What happened:
 Core never touches the network. Attach the discord.js adapter before `start()`:
 
 ```ts
-import { Bot } from "@nexum/core";
-import { createDiscordConnector } from "@nexum/discord";
+import { Bot } from "@alenexum/core";
+import { createDiscordConnector } from "@alenexum/discord";
 import { GatewayIntentBits } from "discord.js";
 
 const bot = new Bot({ token: process.env.DISCORD_TOKEN! });
@@ -76,7 +76,7 @@ The connector wires `interactionCreate → bot.handleInteraction(interaction, cl
 Typed options require `defineCommand` — it infers `ctx.options` from the schema. (Inline `bot.command({...})` accepts the same shape but without inference; `ctx.options` stays `Record<string, unknown>`.)
 
 ```ts
-import { Bot, defineCommand, integerOption } from "@nexum/core";
+import { Bot, defineCommand, integerOption } from "@alenexum/core";
 
 const add = defineCommand({
   name: "add",

@@ -3,8 +3,8 @@ import {
   createLogger,
   type DispatchObserver,
   FrameworkError,
-} from "@nexum/core";
-import { chatInputInteraction } from "@nexum/testing";
+} from "@alenexum/core";
+import { chatInputInteraction } from "@alenexum/testing";
 import { describe, expect, it } from "vitest";
 import {
   Counter,

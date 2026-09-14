@@ -1,2 +1,2 @@
-// @nexum/components — reserved for a later phase. Intentionally empty.
+// @alenexum/components — reserved for a later phase. Intentionally empty.
 export {};

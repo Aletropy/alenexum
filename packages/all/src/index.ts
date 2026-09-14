@@ -1,2 +1,2 @@
-// @nexum/all — reserved for a later phase. Intentionally empty.
+// @alenexum/all — reserved for a later phase. Intentionally empty.
 export {};

@@ -1,11 +1,11 @@
-# `@nexum/jobs`
+# `@alenexum/jobs`
 
 In-process background jobs: fixed-rate scheduling, per-run timeouts with
 cooperative cancellation, overlap control, isolated error boundaries, and
 stats. Wire into a bot with `jobsPlugin(scheduler)`.
 
 ```ts
-import { JobScheduler, defineJob, jobsPlugin } from "@nexum/jobs";
+import { JobScheduler, defineJob, jobsPlugin } from "@alenexum/jobs";
 
 const scheduler = new JobScheduler({ logger, services });
 scheduler.register(

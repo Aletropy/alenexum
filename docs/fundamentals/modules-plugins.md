@@ -16,7 +16,7 @@ Both are `{ name, version?, dependencies?, setup(host) }`, where `host` (`Plugin
 
 ```ts
 // modules/greetings.ts — feature slice
-import { defineModule } from "@nexum/core";
+import { defineModule } from "@alenexum/core";
 
 export default defineModule({
   name: "greetings",
@@ -36,7 +36,7 @@ export default defineModule({
 
 ```ts
 // plugins/audit.ts — cross-cutting
-import { defineGuard, definePlugin } from "@nexum/core";
+import { defineGuard, definePlugin } from "@alenexum/core";
 
 export default definePlugin({
   name: "audit",

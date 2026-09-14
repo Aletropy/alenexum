@@ -3,7 +3,7 @@ import {
   type LoadOptions,
   type LoadReport,
   loadDefinitions,
-} from "@nexum/core";
+} from "@alenexum/core";
 import type { JobDefinition } from "./jobs.js";
 
 /**

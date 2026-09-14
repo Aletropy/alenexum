@@ -5,14 +5,14 @@ import {
   dispatchContextMenu,
   dispatchModal,
   type TestBotLike,
-} from "@nexum/testing";
+} from "@alenexum/testing";
 import { describe, expect, expectTypeOf, it } from "vitest";
 import { Bot } from "../src/bot.js";
 import { createLogger } from "../src/logger.js";
 
 /**
  * Contract: the real `Bot` satisfies the harness's structural surface, so
- * `@nexum/testing` can stay dependency-free without drifting.
+ * `@alenexum/testing` can stay dependency-free without drifting.
  */
 describe("testing harness contract", () => {
   function botWithAllKinds(): Bot {

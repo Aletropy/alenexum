@@ -1,4 +1,4 @@
-import { FakeOptionResolver } from "@nexum/testing";
+import { FakeOptionResolver } from "@alenexum/testing";
 import { describe, expect, it } from "vitest";
 import { FrameworkError } from "../src/errors.js";
 import {

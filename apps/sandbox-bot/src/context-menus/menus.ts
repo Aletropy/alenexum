@@ -1,4 +1,4 @@
-import { defineContextMenu } from "@nexum/core";
+import { defineContextMenu } from "@alenexum/core";
 
 export const avatarMenu = defineContextMenu({
   type: "user",

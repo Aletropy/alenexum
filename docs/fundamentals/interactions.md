@@ -10,7 +10,7 @@ Slash commands are one of five interaction kinds. All five share the same pipeli
 ## Components (buttons and selects)
 
 ```ts
-import { defineComponent } from "@nexum/core";
+import { defineComponent } from "@alenexum/core";
 
 export default defineComponent({
   customId: "vote",
@@ -31,7 +31,7 @@ export default defineComponent({
 ## Modals
 
 ```ts
-import { defineModal } from "@nexum/core";
+import { defineModal } from "@alenexum/core";
 
 export default defineModal({
   customId: "feedback",
@@ -47,7 +47,7 @@ Same prefix routing as components. `ctx.fields.get(name)` wraps `getTextInputVal
 ## Autocomplete
 
 ```ts
-import { defineAutocomplete } from "@nexum/core";
+import { defineAutocomplete } from "@alenexum/core";
 
 export default defineAutocomplete({
   command: "search",
@@ -69,7 +69,7 @@ export default defineAutocomplete({
 ## Context menus (user and message commands)
 
 ```ts
-import { defineContextMenu } from "@nexum/core";
+import { defineContextMenu } from "@alenexum/core";
 
 export const menus = [
   defineContextMenu({

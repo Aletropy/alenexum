@@ -1,14 +1,14 @@
 ---
-title: "API: @nexum/discord"
+title: "API: @alenexum/discord"
 description: Discord transport adapter and REST deployment reference.
 ---
 
-# API: `@nexum/discord`
+# API: `@alenexum/discord`
 
-Thin adapter over discord.js. Dependencies: `@nexum/core`, `discord.js`.
+Thin adapter over discord.js. Dependencies: `@alenexum/core`, `discord.js`.
 
 ```ts
-import { createDiscordConnector } from "@nexum/discord";
+import { createDiscordConnector } from "@alenexum/discord";
 ```
 
 | Export | Kind | Purpose |
@@ -21,7 +21,7 @@ import { createDiscordConnector } from "@nexum/discord";
 | `toContextMenuJSON(def)` | function | `ContextMenuDefinition` → builder JSON (type 2/3). |
 | `collectDeployBody(bot)` | function | Combined `unknown[]` body for `REST.put`. |
 
-**Behavior:** `start()` attaches `interactionCreate → bot.handleInteraction` once, then `client.login(token)`; `stop()` destroys the client. `deployCommands()` no-ops on `skip`, requires post-login application id, requires `guildId` in `guild` mode — violations throw `FRAMEWORK_INVALID_CONFIGURATION`. **Limits:** single `Client` per connector; sharding lives in `@nexum/sharding`.
+**Behavior:** `start()` attaches `interactionCreate → bot.handleInteraction` once, then `client.login(token)`; `stop()` destroys the client. `deployCommands()` no-ops on `skip`, requires post-login application id, requires `guildId` in `guild` mode — violations throw `FRAMEWORK_INVALID_CONFIGURATION`. **Limits:** single `Client` per connector; sharding lives in `@alenexum/sharding`.
 
 Guide: [Deploy commands](../guides/deploy-commands.md).
 

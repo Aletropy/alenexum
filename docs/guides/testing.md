@@ -7,14 +7,14 @@ description: Test commands, middleware, guards, and failures without Discord —
 
 Strategy: mostly fast unit + type tests, fewer integration tests, a small E2E set, regression tests for important fixes, and the sandbox as the living stress harness. Tests are deterministic, isolated, async-explicit, and timing-flake resistant (injectable clocks, no wall-time assertions).
 
-## The harness (`@nexum/testing`)
+## The harness (`@alenexum/testing`)
 
 Zero dependencies (intentionally — avoids a core cycle). Two pieces:
 
 **Fakes** — structural interactions satisfying the framework's probes:
 
 ```ts
-import { chatInputInteraction, buttonInteraction } from "@nexum/testing";
+import { chatInputInteraction, buttonInteraction } from "@alenexum/testing";
 
 const interaction = chatInputInteraction({ commandName: "add", options: { a: 2, b: 3 } });
 ```
@@ -24,7 +24,7 @@ Factories: `createFakeInteraction`, `chatInputInteraction`, `buttonInteraction`,
 **Dispatch helpers** — drive a real `Bot` through `handleInteraction`:
 
 ```ts
-import { dispatchChatInput, LogCapture } from "@nexum/testing";
+import { dispatchChatInput, LogCapture } from "@alenexum/testing";
 
 const { result, interaction } = await dispatchChatInput(bot, "add", { a: 2, b: 3 });
 expect(result.ok).toBe(true);

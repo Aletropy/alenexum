@@ -12,14 +12,14 @@ import {
   loadModals,
   loadModules,
   loadPlugins,
-} from "@nexum/core";
-import { createDiscordConnector } from "@nexum/discord";
-import { JobScheduler, jobsPlugin, loadJobs } from "@nexum/jobs";
+} from "@alenexum/core";
+import { createDiscordConnector } from "@alenexum/discord";
+import { JobScheduler, jobsPlugin, loadJobs } from "@alenexum/jobs";
 import {
   createDispatchMetrics,
   discordClientCheck,
   HealthMonitor,
-} from "@nexum/telemetry";
+} from "@alenexum/telemetry";
 import { GatewayIntentBits } from "discord.js";
 
 const token = process.env.DISCORD_TOKEN;

@@ -1,4 +1,4 @@
-# `@nexum/testing`
+# `@alenexum/testing`
 
 Fakes and integration harness for testing bots. No network, no tokens, deterministic.
 
@@ -14,7 +14,7 @@ Fakes and integration harness for testing bots. No network, no tokens, determini
 ## Harness
 
 ```ts
-import { createTestBot, dispatchChatInput } from "@nexum/testing";
+import { createTestBot, dispatchChatInput } from "@alenexum/testing";
 
 const { bot, logs } = createTestBot();
 bot.command(pingCommand);

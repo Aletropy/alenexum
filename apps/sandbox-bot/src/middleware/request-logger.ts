@@ -1,4 +1,4 @@
-import type { Middleware } from "@nexum/core";
+import type { Middleware } from "@alenexum/core";
 
 /** Global middleware seed: logs every interaction with its route and requestId. */
 export const requestLogger: Middleware = async (ctx, next) => {

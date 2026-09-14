@@ -1,11 +1,11 @@
 ---
-title: "API: @nexum/testing"
+title: "API: @alenexum/testing"
 description: Fake interactions, dispatch harness, and log capture reference.
 ---
 
-# API: `@nexum/testing`
+# API: `@alenexum/testing`
 
-Zero dependencies (avoids a core cycle). Import from `@nexum/testing`.
+Zero dependencies (avoids a core cycle). Import from `@alenexum/testing`.
 
 **Fakes** (`fakes.ts`): `FakeInteraction` (structural `isChatInputCommand/isButton/is*Select/isModalSubmit/isAutocomplete/is*ContextMenuCommand`, reply/defer/followUp/update/deferUpdate/respond recording), `FakeOptionResolver` (all getters + `getFocused`), `FakeInteractionOptions`, `NonCommandOptions`, factories `createFakeInteraction`, `chatInputInteraction`, `buttonInteraction`, `selectInteraction`, `modalInteraction`, `autocompleteInteraction`, `contextMenuInteraction`.
 

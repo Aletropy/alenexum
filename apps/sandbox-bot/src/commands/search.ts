@@ -1,4 +1,4 @@
-import { defineCommand, stringOption } from "@nexum/core";
+import { defineCommand, stringOption } from "@alenexum/core";
 
 export const searchCommand = defineCommand({
   name: "search",

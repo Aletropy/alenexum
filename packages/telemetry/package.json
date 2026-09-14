@@ -1,5 +1,5 @@
 {
-  "name": "@nexum/telemetry",
+  "name": "@alenexum/telemetry",
   "version": "0.1.0",
   "type": "module",
   "main": "./dist/index.js",
@@ -21,11 +21,11 @@
     "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
-    "@nexum/core": "workspace:*"
+    "@alenexum/core": "workspace:*"
   },
   "devDependencies": {
-    "@nexum/testing": "workspace:*",
-    "@nexum/typescript-config": "workspace:*",
+    "@alenexum/testing": "workspace:*",
+    "@alenexum/typescript-config": "workspace:*",
     "@types/node": "^22.10.0",
     "tsup": "^8.5.0",
     "typescript": "~5.9.3",
@@ -35,7 +35,7 @@
   "author": "Aletropy",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Aletropy/nexum.git"
+    "url": "https://github.com/Aletropy/alenexum.git"
   },
   "publishConfig": {
     "access": "public"

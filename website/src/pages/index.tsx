@@ -8,12 +8,12 @@ export default function Home(): React.JSX.Element {
   return (
     <Layout title={siteConfig.title} description={siteConfig.tagline}>
       <main style={{ padding: "4rem 2rem", maxWidth: 960, margin: "0 auto" }}>
-        <h1>Nexum</h1>
+        <h1>Alenexum</h1>
         <p>{siteConfig.tagline}</p>
         <p>
-          Nexum is an application framework for Discord bots. discord.js owns
-          the network; Nexum owns application architecture: lifecycle, routing,
-          middleware, registries, modules, plugins, config, logging,
+          Alenexum is an application framework for Discord bots. discord.js owns
+          the network; Alenexum owns application architecture: lifecycle,
+          routing, middleware, registries, modules, plugins, config, logging,
           diagnostics, and testing.
         </p>
         <div style={{ display: "flex", gap: "1rem" }}>

@@ -1,11 +1,11 @@
 ---
-title: "API: @nexum/sharding"
+title: "API: @alenexum/sharding"
 description: Sharding coordination over discord.js ShardingManager.
 ---
 
-# API: `@nexum/sharding`
+# API: `@alenexum/sharding`
 
-Depends on `@nexum/core`, `discord.js`, `zod`. Import from `@nexum/sharding`.
+Depends on `@alenexum/core`, `discord.js`, `zod`. Import from `@alenexum/sharding`.
 
 | Export | Kind | Notes |
 |---|---|---|

@@ -1,4 +1,4 @@
-import { defineCommand } from "@nexum/core";
+import { defineCommand } from "@alenexum/core";
 
 export const pingCommand = defineCommand({
   name: "ping",

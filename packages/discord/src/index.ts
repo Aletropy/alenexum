@@ -1,5 +1,5 @@
 /**
- * `@nexum/discord` — thin transport adapter over discord.js.
+ * `@alenexum/discord` — thin transport adapter over discord.js.
  *
  * discord.js owns Gateway, REST, rate limits, caches, and builders. This
  * package only adapts them to core's {@link Connector} contract and deploys

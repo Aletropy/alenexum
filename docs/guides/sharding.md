@@ -5,10 +5,10 @@ description: Coordinate discord.js sharding with validated options, per-shard lo
 
 # Sharding
 
-`@nexum/sharding` coordinates discord.js `ShardingManager` — it does not implement sharding itself (sharding primitives remain a **discord.js responsibility**). Use it when a single process can no longer hold your guild count; until then, do not shard (see [Evolution](../architecture/evolution.md)).
+`@alenexum/sharding` coordinates discord.js `ShardingManager` — it does not implement sharding itself (sharding primitives remain a **discord.js responsibility**). Use it when a single process can no longer hold your guild count; until then, do not shard (see [Evolution](../architecture/evolution.md)).
 
 ```ts
-import { resolveShardOptions, createShardingManager, ShardCoordinator } from "@nexum/sharding";
+import { resolveShardOptions, createShardingManager, ShardCoordinator } from "@alenexum/sharding";
 
 const options = resolveShardOptions({
   token: process.env.DISCORD_TOKEN!,

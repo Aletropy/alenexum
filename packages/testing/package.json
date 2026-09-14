@@ -1,5 +1,5 @@
 {
-  "name": "@nexum/testing",
+  "name": "@alenexum/testing",
   "version": "0.1.0",
   "type": "module",
   "main": "./dist/index.js",
@@ -22,7 +22,7 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@nexum/typescript-config": "workspace:*",
+    "@alenexum/typescript-config": "workspace:*",
     "@types/node": "^22.10.0",
     "tsup": "^8.5.0",
     "typescript": "~5.9.3",
@@ -32,7 +32,7 @@
   "author": "Aletropy",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Aletropy/nexum.git"
+    "url": "https://github.com/Aletropy/alenexum.git"
   },
   "publishConfig": {
     "access": "public"

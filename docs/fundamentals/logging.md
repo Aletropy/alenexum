@@ -17,7 +17,7 @@ userId, shardId, requestId, durationMs, error{name,message,stack,code}
 ## Usage
 
 ```ts
-import { createLogger } from "@nexum/core";
+import { createLogger } from "@alenexum/core";
 
 const logger = createLogger({ level: "info", pretty: process.env.NODE_ENV !== "production" });
 const bot = new Bot({ token, logger });
@@ -30,7 +30,7 @@ async execute(ctx) {
 }
 ```
 
-`createLogger({ level, pretty, name, destination })`: `destination` is a pino destination seam used by tests (`LogCapture` in `@nexum/testing` parses the JSON lines). `logger.child(bindings)` merges bindings — contexts, units (`plugin`/`module`), and `shardLogger(shardId)` all build on it.
+`createLogger({ level, pretty, name, destination })`: `destination` is a pino destination seam used by tests (`LogCapture` in `@alenexum/testing` parses the JSON lines). `logger.child(bindings)` merges bindings — contexts, units (`plugin`/`module`), and `shardLogger(shardId)` all build on it.
 
 ## Redaction
 

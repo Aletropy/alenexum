@@ -1,4 +1,4 @@
-import { defineComponent } from "@nexum/core";
+import { defineComponent } from "@alenexum/core";
 
 export const colorSelect = defineComponent({
   customId: "color-pick",

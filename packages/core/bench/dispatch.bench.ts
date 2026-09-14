@@ -3,7 +3,7 @@
  * guards, option parsing, handler, and structured logging (silent).
  */
 
-import { createFakeInteraction } from "@nexum/testing";
+import { createFakeInteraction } from "@alenexum/testing";
 import { bench, describe } from "vitest";
 import { Bot, cooldown, defineCommand, integerOption } from "../src/index.js";
 import { createLogger } from "../src/logger.js";

@@ -1,12 +1,12 @@
 // Critical doc snippets: jobs, telemetry, observed-bot wiring (mirrors guides).
 // Typechecked in CI (website check:examples).
-import { Bot, createLogger } from "@nexum/core";
-import { defineJob, JobScheduler, jobsPlugin } from "@nexum/jobs";
+import { Bot, createLogger } from "@alenexum/core";
+import { defineJob, JobScheduler, jobsPlugin } from "@alenexum/jobs";
 import {
   createDispatchMetrics,
   discordClientCheck,
   HealthMonitor,
-} from "@nexum/telemetry";
+} from "@alenexum/telemetry";
 
 export const heartbeat = defineJob({
   name: "heartbeat",

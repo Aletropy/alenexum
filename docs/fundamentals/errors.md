@@ -8,7 +8,7 @@ description: FrameworkError, stable codes, categories, diagnostics, and the Dete
 Every framework failure is a `FrameworkError`: a stable machine-readable `code` (`FRAMEWORK_*`), a `category`, contextual metadata, an optional actionable `diagnostic`, and a preserved `cause` chain.
 
 ```ts
-import { FrameworkError, isFrameworkError, formatFrameworkError } from "@nexum/core";
+import { FrameworkError, isFrameworkError, formatFrameworkError } from "@alenexum/core";
 
 try {
   await bot.start();

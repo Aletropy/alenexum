@@ -1,4 +1,4 @@
-import { chatInputInteraction } from "@nexum/testing";
+import { chatInputInteraction } from "@alenexum/testing";
 import { describe, expect, it } from "vitest";
 import { Bot } from "../src/bot.js";
 import {

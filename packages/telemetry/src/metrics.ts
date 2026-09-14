@@ -1,9 +1,9 @@
-import { type DispatchObserver, FrameworkError } from "@nexum/core";
+import { type DispatchObserver, FrameworkError } from "@alenexum/core";
 
 /**
  * Minimal metrics: counters, gauges, histograms with labels, a JSON
  * snapshot, and Prometheus text exposition. Zero dependencies, opt-in via
- * `@nexum/telemetry` — small bots pay nothing. Wire to a bot
+ * `@alenexum/telemetry` — small bots pay nothing. Wire to a bot
  * with `dispatchMetricsObserver(registry)` passed as `BotOptions.observer`;
  * serve `createMetricsHandler(registry)()` from your own HTTP server (the
  * framework never owns a port).

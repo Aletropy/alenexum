@@ -13,8 +13,8 @@ Bot
 One process, a handful of commands, `deploy: { mode: "skip" }` or dev-guild deploy, default in-memory everything. No modules, no plugins, no jobs, no metrics — add them when you feel the need, not before.
 
 ```ts
-import { Bot } from "@nexum/core";
-import { createDiscordConnector } from "@nexum/discord";
+import { Bot } from "@alenexum/core";
+import { createDiscordConnector } from "@alenexum/discord";
 import { GatewayIntentBits } from "discord.js";
 
 const bot = new Bot({ token: process.env.DISCORD_TOKEN! });

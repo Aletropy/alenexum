@@ -2,14 +2,14 @@ import type * as Preset from "@docusaurus/preset-classic";
 import type { Config } from "@docusaurus/types";
 
 const config: Config = {
-  title: "Nexum",
+  title: "Alenexum",
   tagline:
     "Application framework for Discord bots, from small projects to enterprise-scale systems.",
   favicon: "img/favicon.ico",
-  url: "https://nexum.dev",
+  url: "https://alenexum.dev",
   baseUrl: "/",
-  organizationName: "nexum",
-  projectName: "nexum",
+  organizationName: "Aletropy",
+  projectName: "alenexum",
   onBrokenLinks: "throw",
   markdown: {
     hooks: {
@@ -42,7 +42,7 @@ const config: Config = {
   ],
   themeConfig: {
     navbar: {
-      title: "Nexum",
+      title: "Alenexum",
       items: [
         { to: "/intro", label: "Docs", position: "left" },
         {
@@ -78,7 +78,7 @@ const config: Config = {
           ],
         },
       ],
-      copyright: `Nexum docs. Built with Docusaurus.`,
+      copyright: `Alenexum docs. Built with Docusaurus.`,
     },
     prism: {
       additionalLanguages: ["bash", "diff", "json"],

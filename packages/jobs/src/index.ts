@@ -1,5 +1,5 @@
 /**
- * `@nexum/jobs` — in-process background jobs with lifecycle.
+ * `@alenexum/jobs` — in-process background jobs with lifecycle.
  *
  * Fixed-rate scheduling, per-run timeouts with cooperative cancellation,
  * overlap control, isolated error boundaries, and stats. This is scheduling

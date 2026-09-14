@@ -4,12 +4,12 @@
     "noEmit": true,
     "baseUrl": ".",
     "paths": {
-      "@nexum/core": ["../../packages/core/src/index.ts"],
-      "@nexum/discord": ["../../packages/discord/src/index.ts"],
-      "@nexum/testing": ["../../packages/testing/src/index.ts"],
-      "@nexum/telemetry": ["../../packages/telemetry/src/index.ts"],
-      "@nexum/jobs": ["../../packages/jobs/src/index.ts"],
-      "@nexum/sharding": ["../../packages/sharding/src/index.ts"]
+      "@alenexum/core": ["../../packages/core/src/index.ts"],
+      "@alenexum/discord": ["../../packages/discord/src/index.ts"],
+      "@alenexum/testing": ["../../packages/testing/src/index.ts"],
+      "@alenexum/telemetry": ["../../packages/telemetry/src/index.ts"],
+      "@alenexum/jobs": ["../../packages/jobs/src/index.ts"],
+      "@alenexum/sharding": ["../../packages/sharding/src/index.ts"]
     }
   },
   "include": ["./**/*.mts"]

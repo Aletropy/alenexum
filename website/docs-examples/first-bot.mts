@@ -1,7 +1,7 @@
 // Critical doc snippet: first bot + typed options (mirrors getting-started/first-bot).
 // Typechecked in CI (website check:examples). Package imports resolve to
 // workspace sources via docs-examples/tsconfig.json paths.
-import { Bot, defineCommand, integerOption } from "@nexum/core";
+import { Bot, defineCommand, integerOption } from "@alenexum/core";
 
 const ping = defineCommand({
   name: "ping",

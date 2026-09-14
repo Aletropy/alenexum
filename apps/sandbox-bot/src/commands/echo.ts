@@ -3,7 +3,7 @@ import {
   cooldown,
   defineCommand,
   stringOption,
-} from "@nexum/core";
+} from "@alenexum/core";
 
 export const echoCommand = defineCommand({
   name: "echo",

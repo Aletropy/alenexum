@@ -6,7 +6,7 @@ description: Rate-limit commands per user, channel, guild, or globally with the 
 # Cooldowns
 
 ```ts
-import { cooldown } from "@nexum/core";
+import { cooldown } from "@alenexum/core";
 
 bot.command({
   name: "echo",

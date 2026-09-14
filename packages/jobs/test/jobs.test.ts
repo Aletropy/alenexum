@@ -1,4 +1,4 @@
-import { Bot, createLogger, FrameworkError } from "@nexum/core";
+import { Bot, createLogger, FrameworkError } from "@alenexum/core";
 import { describe, expect, expectTypeOf, it } from "vitest";
 import { defineJob, JobScheduler, jobsPlugin } from "../src/jobs.js";
 

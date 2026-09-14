@@ -29,16 +29,16 @@ importers:
 
   apps/sandbox-bot:
     dependencies:
-      '@nexum/core':
+      '@alenexum/core':
         specifier: workspace:*
         version: link:../../packages/core
-      '@nexum/discord':
+      '@alenexum/discord':
         specifier: workspace:*
         version: link:../../packages/discord
-      '@nexum/jobs':
+      '@alenexum/jobs':
         specifier: workspace:*
         version: link:../../packages/jobs
-      '@nexum/telemetry':
+      '@alenexum/telemetry':
         specifier: workspace:*
         version: link:../../packages/telemetry
       discord.js:
@@ -48,7 +48,7 @@ importers:
         specifier: ^16.4.5
         version: 16.6.1
     devDependencies:
-      '@nexum/typescript-config':
+      '@alenexum/typescript-config':
         specifier: workspace:*
         version: link:../../tooling/typescript-config
       '@types/node':
@@ -84,10 +84,10 @@ importers:
         specifier: ^4.1.5
         version: 4.6.4
     devDependencies:
-      '@nexum/testing':
+      '@alenexum/testing':
         specifier: workspace:*
         version: link:../testing
-      '@nexum/typescript-config':
+      '@alenexum/typescript-config':
         specifier: workspace:*
         version: link:../../tooling/typescript-config
       '@types/node':
@@ -105,14 +105,14 @@ importers:
 
   packages/discord:
     dependencies:
-      '@nexum/core':
+      '@alenexum/core':
         specifier: workspace:*
         version: link:../core
       discord.js:
         specifier: ^14.18.0
         version: 14.27.0
     devDependencies:
-      '@nexum/typescript-config':
+      '@alenexum/typescript-config':
         specifier: workspace:*
         version: link:../../tooling/typescript-config
       '@types/node':
@@ -132,14 +132,14 @@ importers:
 
   packages/jobs:
     dependencies:
-      '@nexum/core':
+      '@alenexum/core':
         specifier: workspace:*
         version: link:../core
     devDependencies:
-      '@nexum/testing':
+      '@alenexum/testing':
         specifier: workspace:*
         version: link:../testing
-      '@nexum/typescript-config':
+      '@alenexum/typescript-config':
         specifier: workspace:*
         version: link:../../tooling/typescript-config
       '@types/node':
@@ -161,7 +161,7 @@ importers:
 
   packages/sharding:
     dependencies:
-      '@nexum/core':
+      '@alenexum/core':
         specifier: workspace:*
         version: link:../core
       discord.js:
@@ -171,10 +171,10 @@ importers:
         specifier: ^4.1.5
         version: 4.6.4
     devDependencies:
-      '@nexum/testing':
+      '@alenexum/testing':
         specifier: workspace:*
         version: link:../testing
-      '@nexum/typescript-config':
+      '@alenexum/typescript-config':
         specifier: workspace:*
         version: link:../../tooling/typescript-config
       '@types/node':
@@ -192,14 +192,14 @@ importers:
 
   packages/telemetry:
     dependencies:
-      '@nexum/core':
+      '@alenexum/core':
         specifier: workspace:*
         version: link:../core
     devDependencies:
-      '@nexum/testing':
+      '@alenexum/testing':
         specifier: workspace:*
         version: link:../testing
-      '@nexum/typescript-config':
+      '@alenexum/typescript-config':
         specifier: workspace:*
         version: link:../../tooling/typescript-config
       '@types/node':
@@ -217,7 +217,7 @@ importers:
 
   packages/testing:
     devDependencies:
-      '@nexum/typescript-config':
+      '@alenexum/typescript-config':
         specifier: workspace:*
         version: link:../../tooling/typescript-config
       '@types/node':

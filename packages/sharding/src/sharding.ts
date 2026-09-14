@@ -2,7 +2,7 @@ import {
   createLogger,
   FrameworkError,
   type FrameworkLogger,
-} from "@nexum/core";
+} from "@alenexum/core";
 import { ShardingManager } from "discord.js";
 import { z } from "zod";
 

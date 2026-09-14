@@ -1,4 +1,4 @@
-# Nexum
+# Alenexum
 
 TypeScript application framework for Discord bots — from tiny bots to enterprise-scale systems.
 
@@ -30,7 +30,7 @@ tooling/            # Shared TypeScript config
 ## Quick start
 
 ```ts
-import { Bot } from "@nexum/core";
+import { Bot } from "@alenexum/core";
 
 const bot = new Bot({ token: process.env.DISCORD_TOKEN! });
 bot.command({

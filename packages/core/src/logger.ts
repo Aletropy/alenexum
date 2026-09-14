@@ -90,7 +90,7 @@ export function createLogger(
   const {
     level = "info",
     pretty = false,
-    name = "nexum",
+    name = "alenexum",
   } = options;
   const baseOptions = {
     level,

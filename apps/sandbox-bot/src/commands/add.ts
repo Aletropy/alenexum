@@ -1,4 +1,4 @@
-import { defineCommand, integerOption } from "@nexum/core";
+import { defineCommand, integerOption } from "@alenexum/core";
 
 export const addCommand = defineCommand({
   name: "add",

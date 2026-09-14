@@ -5,12 +5,12 @@ description: Run periodic work with JobScheduler, bound to the bot lifecycle.
 
 # Background jobs
 
-`@nexum/jobs` runs cooperative periodic work in-process: heartbeats, cache refreshes, reminder sweeps. It is not a distributed queue — for multi-process work, see [Limitations](../architecture/limitations.md).
+`@alenexum/jobs` runs cooperative periodic work in-process: heartbeats, cache refreshes, reminder sweeps. It is not a distributed queue — for multi-process work, see [Limitations](../architecture/limitations.md).
 
 ## Defining a job
 
 ```ts
-import { defineJob } from "@nexum/jobs";
+import { defineJob } from "@alenexum/jobs";
 
 export default defineJob({
   name: "heartbeat",
@@ -28,7 +28,7 @@ export default defineJob({
 ## Running the scheduler
 
 ```ts
-import { JobScheduler, jobsPlugin, loadJobs } from "@nexum/jobs";
+import { JobScheduler, jobsPlugin, loadJobs } from "@alenexum/jobs";
 
 const scheduler = new JobScheduler({ logger: bot.logger.child({ subsystem: "jobs" }), services: bot.services });
 bot.services.register("scheduler", scheduler);

@@ -1,4 +1,4 @@
-import { defineComponent } from "@nexum/core";
+import { defineComponent } from "@alenexum/core";
 
 const counts = new Map<string, number>([
   ["yes", 0],

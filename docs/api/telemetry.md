@@ -1,11 +1,11 @@
 ---
-title: "API: @nexum/telemetry"
+title: "API: @alenexum/telemetry"
 description: Health checks and metrics primitives reference.
 ---
 
-# API: `@nexum/telemetry`
+# API: `@alenexum/telemetry`
 
-Opt-in, dependency-free (peer: `@nexum/core`). Import from `@nexum/telemetry`.
+Opt-in, dependency-free (peer: `@alenexum/core`). Import from `@alenexum/telemetry`.
 
 **Health** (`health.ts`): `HealthCheckStatus = "pass" | "fail" | "timeout"`, `OverallHealth = "healthy" | "degraded" | "unhealthy"`, `HealthCheckResult/Report/Options`, `HealthCheckFn`, `HealthMonitor { register(name, check, options?), getUptimeMs(), check(), runOne() }` (timeout race, critical→unhealthy/degraded aggregation), `discordClientCheck(client: { isReady() })`.
 

@@ -1,5 +1,5 @@
-import { createLogger, FrameworkError } from "@nexum/core";
-import { LogCapture } from "@nexum/testing";
+import { createLogger, FrameworkError } from "@alenexum/core";
+import { LogCapture } from "@alenexum/testing";
 import { describe, expect, it } from "vitest";
 import {
   createShardingManager,

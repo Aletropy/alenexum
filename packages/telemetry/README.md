@@ -1,4 +1,4 @@
-# `@nexum/telemetry`
+# `@alenexum/telemetry`
 
 Opt-in production observability. Zero dependencies, no ports owned, no SDKs
 vendored — the framework emits observations and spans through structural
@@ -7,7 +7,7 @@ hooks; this package consumes them.
 ## Metrics
 
 ```ts
-import { createDispatchMetrics, createMetricsHandler } from "@nexum/telemetry";
+import { createDispatchMetrics, createMetricsHandler } from "@alenexum/telemetry";
 import http from "node:http";
 
 const metrics = createDispatchMetrics();
@@ -36,7 +36,7 @@ refreshed per observation. Custom counters/gauges/histograms via
 ## Health
 
 ```ts
-import { HealthMonitor, discordClientCheck } from "@nexum/telemetry";
+import { HealthMonitor, discordClientCheck } from "@alenexum/telemetry";
 
 const health = new HealthMonitor();
 health.register("discord", discordClientCheck(connector.client));
@@ -60,7 +60,7 @@ install, no version to align:
 
 ```ts
 import { trace } from "@opentelemetry/api";
-import type { TracerLike } from "@nexum/core";
+import type { TracerLike } from "@alenexum/core";
 
 const bot = new Bot({ token, tracer: trace.getTracer("bot") as unknown as TracerLike });
 ```

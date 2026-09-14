@@ -5,12 +5,12 @@ description: HealthMonitor checks and Prometheus-style dispatch metrics with zer
 
 # Health and metrics
 
-`@nexum/telemetry` is opt-in and dependency-free: no Prometheus server, no OTel SDK, no external services required. It provides primitives; exposition and alerting are application choices.
+`@alenexum/telemetry` is opt-in and dependency-free: no Prometheus server, no OTel SDK, no external services required. It provides primitives; exposition and alerting are application choices.
 
 ## Health checks
 
 ```ts
-import { HealthMonitor, discordClientCheck } from "@nexum/telemetry";
+import { HealthMonitor, discordClientCheck } from "@alenexum/telemetry";
 
 const health = new HealthMonitor();
 health.register("discord", discordClientCheck(connector.client));
@@ -28,7 +28,7 @@ const report = await health.check();
 ## Dispatch metrics
 
 ```ts
-import { createDispatchMetrics, MetricRegistry, createMetricsHandler } from "@nexum/telemetry";
+import { createDispatchMetrics, MetricRegistry, createMetricsHandler } from "@alenexum/telemetry";
 
 const metrics = createDispatchMetrics(); // { registry, observer }
 const bot = new Bot({ token, observer: metrics.observer });

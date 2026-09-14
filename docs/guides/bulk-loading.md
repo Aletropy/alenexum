@@ -8,7 +8,7 @@ description: Explicit bootstrap directory loading — sorted, validated, fail-fa
 `load*` functions are **explicit bulk registration**: the call site names the directory and the kind. There is no magic discovery, no ambient filesystem access, no hot-path I/O — ever.
 
 ```ts
-import { loadCommands, loadMiddleware } from "@nexum/core";
+import { loadCommands, loadMiddleware } from "@alenexum/core";
 
 await loadMiddleware(bot, src("middleware"));
 await loadCommands(bot, src("commands"));
@@ -19,7 +19,7 @@ await loadContextMenus(bot, src("context-menus"));
 await loadGuards(bot, src("guards"));       // when you keep guards in files
 await loadPlugins(bot, src("plugins"));
 await loadModules(bot, src("modules"));
-await loadJobs(scheduler, bot.logger, src("jobs")); // @nexum/jobs
+await loadJobs(scheduler, bot.logger, src("jobs")); // @alenexum/jobs
 ```
 
 Rules (all enforced):

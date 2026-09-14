@@ -1,4 +1,4 @@
-# `@nexum/sharding`
+# `@alenexum/sharding`
 
 Lifecycle and typed evaluation over discord.js `ShardingManager`.
 discord.js owns spawning, IPC, and shard state — this package validates
@@ -6,7 +6,7 @@ config, classifies failures, bounds operations with timeouts, and tags
 logs per shard (`shardId` flows into every structured line).
 
 ```ts
-import { ShardCoordinator, createShardingManager } from "@nexum/sharding";
+import { ShardCoordinator, createShardingManager } from "@alenexum/sharding";
 
 const manager = createShardingManager({
   token: process.env.DISCORD_TOKEN!, // explicit only — never env-sniffed, never logged

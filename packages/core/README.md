@@ -1,13 +1,13 @@
-# `@nexum/core`
+# `@alenexum/core`
 
 Application architecture for Discord bots. No discord.js dependency — the
 transport is injected via the `Connector` interface (implemented by
-`@nexum/discord`).
+`@alenexum/discord`).
 
 ## API
 
 ```ts
-import { Bot, defineCommand, createLogger } from "@nexum/core";
+import { Bot, defineCommand, createLogger } from "@alenexum/core";
 
 const bot = new Bot({ token: process.env.DISCORD_TOKEN! });
 
@@ -38,7 +38,7 @@ Options are declared with builders and flow into the handler type — required
 vs optional, choice literals, and entity shapes are all inferred:
 
 ```ts
-import { defineCommand, integerOption, stringOption, userOption } from "@nexum/core";
+import { defineCommand, integerOption, stringOption, userOption } from "@alenexum/core";
 
 const ban = defineCommand({
   name: "ban",
@@ -133,7 +133,7 @@ import {
   defineGuard,
   requireGuild,
   requireUserPermissions,
-} from "@nexum/core";
+} from "@alenexum/core";
 import { PermissionFlagsBits } from "discord.js";
 
 bot.guard(defineGuard({ name: "audit", check: (ctx) => true })); // global
@@ -162,7 +162,7 @@ All permission checks are fail-closed.
 ## Plugins, modules, services
 
 ```ts
-import { defineModule, definePlugin } from "@nexum/core";
+import { defineModule, definePlugin } from "@alenexum/core";
 
 await bot.plugin(
   definePlugin({
@@ -205,7 +205,7 @@ order, every module is validated by the same registries as manual calls,
 and every outcome is logged.
 
 ```ts
-import { loadCommands, loadComponents } from "@nexum/core";
+import { loadCommands, loadComponents } from "@alenexum/core";
 import { fileURLToPath } from "node:url";
 
 const src = (dir: string): string =>
@@ -218,7 +218,7 @@ await loadComponents(bot, src("components"));
 Conventions per file: the default export holds one definition or an array
 of them (`loadCommands`, `loadComponents`, `loadModals`,
 `loadAutocomplete`, `loadContextMenus`, `loadMiddleware`, `loadGuards`,
-`loadPlugins`, `loadModules`; `loadJobs` lives in `@nexum/jobs`).
+`loadPlugins`, `loadModules`; `loadJobs` lives in `@alenexum/jobs`).
 Options: `recursive`, `pattern`, `extensions`. The first invalid file
 aborts the boot with file context — same fail-fast philosophy as manual
 registration. Directory scanning happens only here, never on the hot path.
@@ -230,7 +230,7 @@ output (or a manifest) for production.
 Opt-in via `BotOptions` — absent hooks cost a single `undefined` check:
 
 ```ts
-import type { TracerLike } from "@nexum/core";
+import type { TracerLike } from "@alenexum/core";
 import { trace } from "@opentelemetry/api"; // your SDK, your version
 
 const bot = new Bot({
@@ -242,7 +242,7 @@ const bot = new Bot({
 
 `bot.getActiveDispatchCount()` exposes in-flight work for health checks;
 `bot.stop()` drains it within `shutdownTimeoutMs` before tearing down the
-connector. See `@nexum/telemetry` for metrics, health checks,
+connector. See `@alenexum/telemetry` for metrics, health checks,
 and Prometheus exposition.
 
 ## Notes

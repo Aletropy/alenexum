@@ -1,4 +1,4 @@
-import { defineCommand } from "@nexum/core";
+import { defineCommand } from "@alenexum/core";
 import {
   ActionRowBuilder,
   type ChatInputCommandInteraction,
