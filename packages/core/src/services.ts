@@ -52,4 +52,14 @@ export class ServiceContainer {
   has(key: ServiceKey): boolean {
     return this.services.has(key);
   }
+
+  /** Non-throwing lookup for optional integrations. */
+  tryGet<T>(key: ServiceKey): T | undefined {
+    return this.has(key) ? (this.services.get(key) as T) : undefined;
+  }
+
+  /** Registered keys, for diagnostics and health checks. */
+  keys(): ServiceKey[] {
+    return [...this.services.keys()];
+  }
 }

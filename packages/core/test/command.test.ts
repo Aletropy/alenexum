@@ -22,6 +22,6 @@ describe("defineCommand", () => {
       },
     });
     expectTypeOf(command.name).toEqualTypeOf<"ping">();
-    expectTypeOf(command.description).toEqualTypeOf<"Ping">();
+    expectTypeOf(command.description).toEqualTypeOf<string>();
   });
 });

@@ -1,21 +1,29 @@
-import type { CommandContext } from "./context.js";
+import type { BaseInteractionContext } from "./context.js";
 import { FrameworkError } from "./errors.js";
 
+/**
+ * Middleware sees the shared base context (ids, logger, services, escape
+ * hatches) across every interaction type. Typed payloads (options, values,
+ * fields) are handler-domain and accessed in `execute`, not middleware.
+ */
 export type Middleware = (
-  ctx: CommandContext,
+  ctx: BaseInteractionContext,
   next: () => Promise<void>,
 ) => void | Promise<void>;
 
-export type CommandHandler = (ctx: CommandContext) => void | Promise<void>;
+export type CommandHandler = (
+  ctx: BaseInteractionContext,
+) => void | Promise<void>;
 
 /**
  * Compose middleware into an onion chain around the final handler.
- * The composition itself is built once per dispatch from pre-registered
- * arrays — no reflection, no allocation beyond the closure chain.
+ * `C` is pinned explicitly at each dispatch site (never inferred from the
+ * handler, whose contravariant parameter would otherwise win). No
+ * reflection, no allocation beyond the closure chain.
  */
-export function compose(
+export function compose<C extends BaseInteractionContext>(
   middlewares: readonly Middleware[],
-): (ctx: CommandContext, handler: CommandHandler) => Promise<void> {
+): (ctx: C, handler: (ctx: C) => void | Promise<void>) => Promise<void> {
   return async (ctx, handler) => {
     let index = -1;
     const dispatch = async (current: number): Promise<void> => {
@@ -27,7 +35,7 @@ export function compose(
           context: {
             subsystem: "middleware",
             event: "middleware.next",
-            command: ctx.commandName,
+            command: ctx.route,
             requestId: ctx.requestId,
           },
           diagnostic: {

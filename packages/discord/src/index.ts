@@ -8,6 +8,11 @@
  */
 
 export {
+  collectDeployBody,
+  toContextMenuJSON,
+  toSlashCommandJSON,
+} from "./deploy.js";
+export {
   createDiscordConnector,
   type DeployOptions,
   type DiscordConnector,

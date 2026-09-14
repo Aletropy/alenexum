@@ -1,6 +1,7 @@
 import { Writable } from "node:stream";
 import { describe, expect, it } from "vitest";
 import { Bot } from "../src/bot.js";
+import { defineCommand, integerOption, stringOption } from "../src/index.js";
 import { createLogger } from "../src/logger.js";
 import { createFakeInteraction } from "./helpers.js";
 
@@ -245,5 +246,55 @@ describe("Bot.handleInteraction", () => {
     if (!result.ok) {
       expect(result.error.code).toBe("FRAMEWORK_COMMAND_HANDLER_FAILED");
     }
+  });
+
+  it("parses options before the handler runs", async () => {
+    const { bot } = testBot();
+    bot.command(
+      defineCommand({
+        name: "add",
+        description: "Add two numbers",
+        options: {
+          a: integerOption({ description: "a", required: true }),
+          b: integerOption({ description: "b", required: true }),
+        },
+        execute: async (ctx) => {
+          await ctx.reply(`sum=${ctx.options.a + ctx.options.b}`);
+        },
+      }),
+    );
+    const interaction = createFakeInteraction({
+      commandName: "add",
+      optionValues: { a: 2, b: 3 },
+    });
+    const result = await bot.handleInteraction(interaction);
+    expect(result.ok).toBe(true);
+    expect(interaction.replies).toEqual(["sum=5"]);
+  });
+
+  it("fails dispatch with FRAMEWORK_COMMAND_VALIDATION_FAILED on bad options", async () => {
+    const { bot } = testBot();
+    const handler = async () => {};
+    bot.command(
+      defineCommand({
+        name: "echo",
+        description: "Echo",
+        options: { text: stringOption({ description: "t", required: true }) },
+        execute: handler,
+      }),
+    );
+    const interaction = createFakeInteraction({
+      commandName: "echo",
+      optionValues: {},
+    });
+    const result = await bot.handleInteraction(interaction);
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.error.code).toBe("FRAMEWORK_COMMAND_VALIDATION_FAILED");
+    }
+    // Handler never ran, and recovery attempted a reply.
+    expect(interaction.replies).toEqual([
+      "Something went wrong while running that command.",
+    ]);
   });
 });

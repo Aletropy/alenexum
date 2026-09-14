@@ -4,6 +4,7 @@ import {
   FrameworkError,
 } from "@discord-framework/core";
 import { Client, type ClientOptions, Events, REST, Routes } from "discord.js";
+import { collectDeployBody } from "./deploy.js";
 
 export interface DeployOptions {
   /** `guild` deploys instantly (dev); `global` propagates slowly; `skip` deploys nothing. */
@@ -113,10 +114,7 @@ export function createDiscordConnector(
           },
         });
       }
-      const body = bot.getCommandDefinitions().map((definition) => ({
-        name: definition.name,
-        description: definition.description,
-      }));
+      const body = collectDeployBody(bot);
       const rest = new REST().setToken(bot.config.token);
       const route =
         deploy.mode === "guild"

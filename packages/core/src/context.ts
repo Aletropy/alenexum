@@ -1,15 +1,17 @@
 import { randomUUID } from "node:crypto";
 import { FrameworkError } from "./errors.js";
 import type { FrameworkLogger } from "./logger.js";
+import type { OptionValues } from "./options.js";
+import { createReplyMethods } from "./replies.js";
 import type { ServiceContainer } from "./services.js";
 
 /**
- * Handler-facing context. Common tasks (reply, logging, services) are
- * first-class; the raw discord.js interaction/client stay reachable via the
- * `interaction` / `client` escape hatches so users never wait on a wrapper.
+ * Fields every interaction context carries. Middleware operates on this base;
+ * handlers receive the specialized extension for their interaction type.
  */
-export interface CommandContext {
-  readonly commandName: string;
+export interface BaseInteractionContext {
+  /** Route key: command name, customId, or menu name. Used for logs, guards, cooldowns. */
+  readonly route: string;
   readonly interactionId: string | undefined;
   readonly guildId: string | null | undefined;
   readonly channelId: string | null | undefined;
@@ -21,9 +23,30 @@ export interface CommandContext {
   readonly interaction: unknown;
   /** Raw discord.js client (escape hatch). */
   readonly client: unknown;
+}
+
+/**
+ * Handler-facing context. Common tasks (reply, logging, services, parsed
+ * options) are first-class; the raw discord.js interaction/client stay
+ * reachable via the `interaction` / `client` escape hatches so users never
+ * wait on a wrapper.
+ */
+export interface CommandContext<TOptions extends OptionValues = OptionValues>
+  extends BaseInteractionContext {
+  readonly commandName: string;
+  readonly logger: FrameworkLogger;
+  readonly services: ServiceContainer;
+  /** Validated option values, typed from the command's option schema. */
+  readonly options: TOptions;
+  /** Raw discord.js interaction (escape hatch). */
+  readonly interaction: unknown;
+  /** Raw discord.js client (escape hatch). */
+  readonly client: unknown;
   reply(message: string): Promise<void>;
   deferReply(): Promise<void>;
   followUp(message: string): Promise<void>;
+  update(message: string): Promise<void>;
+  deferUpdate(): Promise<void>;
 }
 
 export interface CreateCommandContextInit {
@@ -32,6 +55,14 @@ export interface CreateCommandContextInit {
   logger: FrameworkLogger;
   services: ServiceContainer;
   requestId?: string;
+  options?: OptionValues | undefined;
+}
+
+export interface InteractionIds {
+  readonly interactionId: string | undefined;
+  readonly guildId: string | null | undefined;
+  readonly channelId: string | null | undefined;
+  readonly userId: string | undefined;
 }
 
 /** True for discord.js chat-input interactions and structurally compatible fakes. */
@@ -44,16 +75,31 @@ export function isChatInputCommandInteraction(raw: unknown): boolean {
     commandName?: unknown;
   };
   if (typeof candidate.isChatInputCommand === "function") {
-    try {
-      return (candidate.isChatInputCommand as () => unknown)() === true;
-    } catch {
-      return false;
-    }
+    return interactionFlag(raw, "isChatInputCommand");
   }
   return typeof candidate.commandName === "string";
 }
 
-function asRecord(raw: unknown): Record<string, unknown> {
+/**
+ * Probe a discord.js-style `isX()` guard. Missing methods read as false;
+ * throwing guards read as false. Never throws.
+ */
+export function interactionFlag(raw: unknown, method: string): boolean {
+  if (typeof raw !== "object" || raw === null) {
+    return false;
+  }
+  const fn = (raw as Record<string, unknown>)[method];
+  if (typeof fn !== "function") {
+    return false;
+  }
+  try {
+    return (fn as () => unknown).call(raw) === true;
+  } catch {
+    return false;
+  }
+}
+
+export function asRecord(raw: unknown): Record<string, unknown> {
   if (typeof raw !== "object" || raw === null) {
     throw new FrameworkError({
       code: "FRAMEWORK_ROUTE_NOT_FOUND",
@@ -95,102 +141,56 @@ function extractCommandName(raw: unknown): string {
   return name;
 }
 
-function alreadyAcknowledgedError(
-  commandName: string,
-  requestId: string,
-): FrameworkError {
-  return new FrameworkError({
-    code: "FRAMEWORK_INTERACTION_ALREADY_ACKNOWLEDGED",
-    category: "DiscordAPI",
-    message: `Interaction for command "${commandName}" was already acknowledged`,
-    context: {
-      subsystem: "dispatch",
-      event: "interaction.reply",
-      command: commandName,
-      requestId,
-    },
-    diagnostic: {
-      likelyCause:
-        "reply() or deferReply() was called twice for the same interaction (duplicate handler execution or a double-ack bug).",
-      suggestedInvestigation: [
-        "Check that only one reply/defer path runs per command execution.",
-        "Look for retried dispatches sharing the same interactionId/requestId in the logs.",
-      ],
-    },
-  });
+/** Best-effort id extraction shared by every interaction context. */
+export function extractInteractionIds(raw: unknown): InteractionIds {
+  if (typeof raw !== "object" || raw === null) {
+    return {
+      interactionId: undefined,
+      guildId: undefined,
+      channelId: undefined,
+      userId: undefined,
+    };
+  }
+  const record = raw as Record<string, unknown>;
+  const userRecord =
+    typeof record.user === "object" && record.user !== null
+      ? (record.user as Record<string, unknown>)
+      : undefined;
+  return {
+    interactionId: optionalString(record.id),
+    guildId: optionalStringOrNull(record.guildId),
+    channelId: optionalStringOrNull(record.channelId),
+    userId:
+      userRecord !== undefined ? optionalString(userRecord.id) : undefined,
+  };
 }
 
 export function createCommandContext(
   init: CreateCommandContextInit,
 ): CommandContext {
   const commandName = extractCommandName(init.interaction);
-  const record = asRecord(init.interaction);
   const requestId = init.requestId ?? randomUUID();
-
-  const replyFn = record.reply;
-  const deferFn = record.deferReply;
-  const followUpFn = record.followUp;
-  if (typeof replyFn !== "function") {
-    throw new FrameworkError({
-      code: "FRAMEWORK_INTERNAL",
-      category: "Internal",
-      message: `Interaction for command "${commandName}" does not support reply()`,
-      context: {
-        subsystem: "dispatch",
-        event: "interaction.normalize",
-        command: commandName,
-        requestId,
-      },
-    });
-  }
-
-  const userRecord =
-    typeof record.user === "object" && record.user !== null
-      ? (record.user as Record<string, unknown>)
-      : undefined;
-
-  // Local ack tracking: Discord rejects double-acks, so fail fast with a
-  // classified error instead of surfacing a raw API failure.
-  let acknowledged = false;
+  const ids = extractInteractionIds(init.interaction);
+  const replies = createReplyMethods({
+    rawInteraction: init.interaction,
+    label: commandName,
+    requestId,
+  });
 
   return {
     commandName,
-    interactionId: optionalString(record.id),
-    guildId: optionalStringOrNull(record.guildId),
-    channelId: optionalStringOrNull(record.channelId),
-    userId:
-      userRecord !== undefined ? optionalString(userRecord.id) : undefined,
+    route: commandName,
+    ...ids,
     requestId,
     logger: init.logger,
     services: init.services,
+    options: init.options ?? {},
     interaction: init.interaction,
     client: init.client,
-    reply: async (message: string): Promise<void> => {
-      if (acknowledged) {
-        throw alreadyAcknowledgedError(commandName, requestId);
-      }
-      acknowledged = true;
-      await (replyFn as (message: string) => Promise<unknown>).call(
-        init.interaction,
-        message,
-      );
-    },
-    deferReply: async (): Promise<void> => {
-      if (acknowledged) {
-        throw alreadyAcknowledgedError(commandName, requestId);
-      }
-      acknowledged = true;
-      if (typeof deferFn === "function") {
-        await (deferFn as () => Promise<unknown>).call(init.interaction);
-      }
-    },
-    followUp: async (message: string): Promise<void> => {
-      if (typeof followUpFn === "function") {
-        await (followUpFn as (message: string) => Promise<unknown>).call(
-          init.interaction,
-          message,
-        );
-      }
-    },
+    reply: replies.reply,
+    deferReply: replies.deferReply,
+    followUp: replies.followUp,
+    update: replies.update,
+    deferUpdate: replies.deferUpdate,
   };
 }

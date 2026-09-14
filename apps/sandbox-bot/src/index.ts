@@ -6,9 +6,24 @@ import {
 } from "@discord-framework/core";
 import { createDiscordConnector } from "@discord-framework/discord";
 import { GatewayIntentBits } from "discord.js";
+import { searchAutocomplete } from "./autocomplete/search.js";
+import { addCommand } from "./commands/add.js";
 import { boomCommand, slowCommand } from "./commands/boom.js";
+import { colorCommand } from "./commands/color.js";
+import { echoCommand } from "./commands/echo.js";
+import { feedbackCommand } from "./commands/feedback.js";
 import { pingCommand } from "./commands/ping.js";
+import { searchCommand } from "./commands/search.js";
+import { serverCommand } from "./commands/server.js";
+import { userinfoCommand } from "./commands/userinfo.js";
+import { voteCommand } from "./commands/vote.js";
+import { colorSelect } from "./components/color.js";
+import { voteButtons } from "./components/vote.js";
+import { avatarMenu, quoteMenu } from "./context-menus/menus.js";
 import { requestLogger } from "./middleware/request-logger.js";
+import { feedbackModal } from "./modals/feedback.js";
+import { greetingsModule } from "./modules/greetings.js";
+import { auditPlugin } from "./plugins/audit.js";
 
 const token = process.env.DISCORD_TOKEN;
 if (token === undefined || token.length === 0) {
@@ -34,8 +49,24 @@ const bot = new Bot({
 
 bot.use(requestLogger);
 bot.command(pingCommand);
+bot.command(addCommand);
+bot.command(echoCommand);
+bot.command(userinfoCommand);
+bot.command(voteCommand);
+bot.command(colorCommand);
+bot.command(feedbackCommand);
+bot.command(searchCommand);
+bot.command(serverCommand);
 bot.command(boomCommand);
 bot.command(slowCommand);
+bot.component(voteButtons);
+bot.component(colorSelect);
+bot.modal(feedbackModal);
+bot.autocomplete(searchAutocomplete);
+bot.contextMenu(avatarMenu);
+bot.contextMenu(quoteMenu);
+await bot.plugin(auditPlugin);
+await bot.module(greetingsModule);
 
 const connector = createDiscordConnector(bot, {
   intents: [GatewayIntentBits.Guilds],

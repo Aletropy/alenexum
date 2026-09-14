@@ -15,7 +15,9 @@
   ],
   "scripts": {
     "build": "tsup",
-    "lint": "biome check src",
+    "test": "vitest run",
+    "test:watch": "vitest watch",
+    "lint": "biome check src test",
     "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
