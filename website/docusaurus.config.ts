@@ -6,9 +6,9 @@ const config: Config = {
   tagline:
     "Application framework for Discord bots, from small projects to enterprise-scale systems.",
   favicon: "img/favicon.ico",
-  url: "https://aletropy.github.io",
+  url: "https://matrovian.github.io",
   baseUrl: "/alenexum/",
-  organizationName: "Aletropy",
+  organizationName: "matrovian",
   projectName: "alenexum",
   onBrokenLinks: "throw",
   markdown: {

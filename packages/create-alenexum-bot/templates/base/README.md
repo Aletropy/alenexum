@@ -1,6 +1,6 @@
 # {{projectName}}
 
-A Discord bot built with [alenexum](https://github.com/Aletropy/alenexum), a TypeScript application framework on top of discord.js.
+A Discord bot built with [alenexum](https://github.com/matrovian/alenexum), a TypeScript application framework on top of discord.js.
 
 ## Setup
 
@@ -48,4 +48,4 @@ A Discord bot built with [alenexum](https://github.com/Aletropy/alenexum), a Typ
 
 ## Learn more
 
-See the [alenexum documentation](https://github.com/Aletropy/alenexum) for guides on commands, middleware, plugins, and more.
+See the [alenexum documentation](https://github.com/matrovian/alenexum) for guides on commands, middleware, plugins, and more.

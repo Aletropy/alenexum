@@ -1,6 +1,6 @@
 # create-alenexum-bot
 
-Scaffold a new [alenexum](https://github.com/Aletropy/alenexum) Discord bot project.
+Scaffold a new [alenexum](https://github.com/matrovian/alenexum) Discord bot project.
 
 ## Usage
 

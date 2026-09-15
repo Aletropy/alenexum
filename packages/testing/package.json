@@ -29,10 +29,10 @@
     "vitest": "^3.2.4"
   },
   "license": "MIT",
-  "author": "Aletropy",
+  "author": "matrovian",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Aletropy/alenexum.git"
+    "url": "https://github.com/matrovian/alenexum.git"
   },
   "publishConfig": {
     "access": "public"
