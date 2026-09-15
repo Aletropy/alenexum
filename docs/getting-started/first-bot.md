@@ -7,6 +7,8 @@ description: Tutorial — install, register a ping command, and start a Alenexum
 
 This tutorial takes you from zero to a working bot that answers `/ping` with `Pong!`.
 
+Prefer a ready-made project? Run `npm create alenexum-bot@latest` (see [Scaffold a new bot](./installation.md#scaffold-a-new-bot)) and skip straight to running it.
+
 ## 0. Install the packages
 
 ```bash

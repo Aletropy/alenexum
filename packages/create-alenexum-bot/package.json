@@ -1,0 +1,41 @@
+{
+  "name": "create-alenexum-bot",
+  "version": "0.1.0",
+  "type": "module",
+  "bin": {
+    "create-alenexum-bot": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "templates"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "test:watch": "vitest watch",
+    "lint": "biome check src test",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "@clack/prompts": "^0.11.0"
+  },
+  "devDependencies": {
+    "@alenexum/typescript-config": "workspace:*",
+    "@types/node": "^22.10.0",
+    "tsup": "^8.5.0",
+    "typescript": "~5.9.3",
+    "vitest": "^3.2.4"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "license": "MIT",
+  "author": "Aletropy",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Aletropy/alenexum.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

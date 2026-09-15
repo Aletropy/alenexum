@@ -26,6 +26,8 @@ packages/testing    # Fakes + integration harness (dependency-free)
 packages/telemetry  # Metrics, health checks (opt-in, zero deps)
 packages/jobs       # Background jobs: scheduler, timeouts, overlap, lifecycle plugin
 packages/sharding   # Lifecycle + typed eval over discord.js ShardingManager
+packages/create-alenexum-bot
+                    # `npm create alenexum-bot` scaffolding CLI
 packages/{commands,events,middleware,components,plugins,cli,all}
                     # Reserved stubs for later phases
 apps/sandbox-bot    # Living stress harness (ping, boom, slow, middleware, shutdown)
@@ -35,6 +37,14 @@ tooling/            # Shared TypeScript config
 ## Installation
 
 Requires Node >= 22.
+
+Fastest start — scaffold a whole project (name, options, and token prompted interactively):
+
+```bash
+npm create alenexum-bot@latest
+```
+
+To add the framework to an existing project instead:
 
 ```bash
 npm install @alenexum/core @alenexum/discord

@@ -1,0 +1,34 @@
+{
+  "name": "{{projectName}}",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">={{nodeMajor}}"
+  },
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "build": "tsup",
+    "start": "node dist/index.js",
+    "lint": "biome check src{{#testing}} test{{/testing}}",
+    "typecheck": "tsc --noEmit -p tsconfig.json"{{#testing}},
+    "test": "vitest run"{{/testing}}
+  },
+  "dependencies": {
+    "@alenexum/core": "{{vCore}}",
+    "@alenexum/discord": "{{vDiscord}}",
+{{#jobs}}    "@alenexum/jobs": "{{vJobs}}",
+{{/jobs}}{{#telemetry}}    "@alenexum/telemetry": "{{vTelemetry}}",
+{{/telemetry}}    "discord.js": "{{vDiscordJs}}",
+    "dotenv": "{{vDotenv}}"
+  },
+  "devDependencies": {
+{{#testing}}    "@alenexum/testing": "{{vTesting}}",
+{{/testing}}    "@biomejs/biome": "{{vBiome}}",
+    "@types/node": "{{vNodeTypes}}",
+    "tsup": "{{vTsup}}",
+    "tsx": "{{vTsx}}",
+    "typescript": "{{vTypescript}}"{{#testing}},
+    "vitest": "{{vVitest}}"{{/testing}}
+  }
+}
