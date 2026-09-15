@@ -10,6 +10,28 @@ description: Install published Alenexum packages from npm, or work from the mono
 - **Node.js >= 22**
 - A Discord application token (env-only, never committed)
 
+## Scaffold a new bot
+
+The fastest way to start a new project is the `create-alenexum-bot` CLI. It walks through an interactive wizard — project name, package manager, Gateway intents preset, command deployment mode, log level, optional features (telemetry, jobs, testing), and a Discord bot token — then generates a ready-to-run project.
+
+```bash
+npm create alenexum-bot@latest my-bot
+# or
+pnpm create alenexum-bot my-bot
+```
+
+The token is optional and, when provided, is written only to a local `.env` file (mode `0600`) — never printed or committed. Skip the wizard entirely with `-y`/`--yes` to accept defaults.
+
+| Flag | Meaning |
+|---|---|
+| `-y, --yes` | Accept defaults, skip all prompts |
+| `--pm=<npm\|pnpm\|yarn\|bun>` | Package manager for the install step |
+| `--token <token>` | Discord bot token (written to `.env` only) |
+| `--no-token` | Skip the token prompt entirely |
+| `--no-install` | Scaffold only; don't run the install step |
+| `--no-git` | Skip git initialization |
+| `-f, --force` | Overwrite a non-empty target directory |
+
 ## Install from npm
 
 All packages are published as versioned ESM modules with TypeScript declarations:

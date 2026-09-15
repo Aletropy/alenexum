@@ -6,13 +6,5 @@
   "javascript": {
     "formatter": { "quoteStyle": "double", "semicolons": "always" }
   },
-  "files": {
-    "includes": [
-      "**",
-      "!**/dist",
-      "!**/node_modules",
-      "!**/.turbo",
-      "!packages/create-alenexum-bot/templates"
-    ]
-  }
+  "files": { "includes": ["**", "!**/dist", "!**/node_modules"] }
 }
