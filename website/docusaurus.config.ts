@@ -56,6 +56,12 @@ const config: Config = {
           label: "Enterprise",
           position: "left",
         },
+        {
+          href: "https://github.com/matrovian/alenexum",
+          label: "GitHub",
+          position: "right",
+          className: "navbar-github-link",
+        },
       ],
     },
     footer: {
