@@ -87,11 +87,7 @@ function wrap(base: pino.Logger): FrameworkLogger {
 export function createLogger(
   options: CreateLoggerOptions = {},
 ): FrameworkLogger {
-  const {
-    level = "info",
-    pretty = false,
-    name = "alenexum",
-  } = options;
+  const { level = "info", pretty = false, name = "alenexum" } = options;
   const baseOptions = {
     level,
     name,

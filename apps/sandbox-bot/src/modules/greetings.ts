@@ -1,8 +1,4 @@
-import {
-  defineCommand,
-  defineModule,
-  stringOption,
-} from "@alenexum/core";
+import { defineCommand, defineModule, stringOption } from "@alenexum/core";
 
 /** Provided by the greetings module; the handler only knows the service key. */
 export const helloCommand = defineCommand({
